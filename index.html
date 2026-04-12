@@ -936,7 +936,7 @@ async function loadHome(){
   alertEl.innerHTML='';
   if(peds){
     peds.filter(p=>!p.anticipo||p.anticipo==0).forEach(p=>{
-      alertEl.innerHTML+=`<div class="alert al-red">🚨 ${p.cliente} — ${p.producto||p.descripcion||'pedido'} · SIN anticipo</div>`;
+      alertEl.innerHTML+=`<div class="alert al-red">🚨 ${p.cliente} - ${p.producto||p.descripcion||'pedido'} · SIN anticipo</div>`;
     });
     const pedHoy=peds.filter(p=>p.fecha_entrega===iso());
     if(pedHoy.length)alertEl.innerHTML+=`<div class="alert al-yellow">⏰ ${pedHoy.length} pedido(s) a entregar HOY</div>`;
@@ -953,7 +953,7 @@ async function loadHome(){
   if(!peds||!peds.length){hP.innerHTML='<div class="empty">Sin pedidos activos</div>';}
   else{
     hP.innerHTML=peds.slice(0,4).map((p,i)=>`<div class="pi" id="hp${i}">
-      <div class="pi-top"><div><div class="pi-n">${p.cliente}</div><div class="pi-p">${p.descripcion||p.producto||p.notas||'—'}${p.tecnica?' · '+p.tecnica:''}</div></div><div class="pi-pr">${fmt(p.precio_total)}</div></div>
+      <div class="pi-top"><div><div class="pi-n">${p.cliente}</div><div class="pi-p">${p.descripcion||p.producto||p.notas||'-'}${p.tecnica?' · '+p.tecnica:''}</div></div><div class="pi-pr">${fmt(p.precio_total)}</div></div>
       <div class="pi-bot">${estBadge(p.estado)}${(parseFloat(p.precio_total||0)-parseFloat(p.anticipo||0))>0?`<span class="bal">Saldo: ${fmt(parseFloat(p.precio_total||0)-parseFloat(p.anticipo||0))}</span>`:''}</div>
     </div>`).join('');
     peds.slice(0,4).forEach((p,i)=>tap(document.getElementById('hp'+i),()=>verDetalle(p)));
@@ -985,7 +985,7 @@ async function loadHome(){
   if(invAlerts){
     const bajos=invAlerts.filter(m=>parseInt(m.stock_actual||0)<=parseInt(m.stock_minimo||0));
     bajos.forEach(m=>{
-      alertEl.innerHTML+=`<div class="alert al-red">📦 ${m.nombre} — stock bajo (${m.stock_actual||0} unidades)</div>`;
+      alertEl.innerHTML+=`<div class="alert al-red">📦 ${m.nombre} - stock bajo (${m.stock_actual||0} unidades)</div>`;
     });
   }
   const hF=document.getElementById('home-fechas');
@@ -1003,7 +1003,7 @@ async function loadHome(){
       const el=document.getElementById('fi'+i);
       if(el)tap(el,()=>{
         const dias=Math.ceil((new Date(f.fecha)-new Date())/(1000*60*60*24));
-        const accion = confirm(`${f.nombre} — ${dias<=0?'HOY':dias+' días'}\n📅 ${f.fecha} · ${f.tipo||''}\n\n💡 ¿Quieres agregar una idea de contenido para esta fecha?`);
+        const accion = confirm(`${f.nombre} - ${dias<=0?'HOY':dias+' días'}\n📅 ${f.fecha} · ${f.tipo||''}\n\n💡 ¿Quieres agregar una idea de contenido para esta fecha?`);
         if(accion){
           const tema=prompt('Idea de contenido para '+f.nombre+':');
           if(tema){
@@ -1040,7 +1040,7 @@ async function loadPedidos(){
   const renderPed=(peds,prefix)=>{
     if(!peds||!peds.length)return'<div class="empty">Sin pedidos</div>';
     return peds.map((p,i)=>`<div class="pi" id="${prefix}${i}">
-      <div class="pi-top"><div><div class="pi-n">${p.cliente}</div><div class="pi-p">${p.descripcion||p.producto||'—'}${p.tecnica?' · '+p.tecnica:''}</div></div><div class="pi-pr">${fmt(p.precio_total)}</div></div>
+      <div class="pi-top"><div><div class="pi-n">${p.cliente}</div><div class="pi-p">${p.descripcion||p.producto||'-'}${p.tecnica?' · '+p.tecnica:''}</div></div><div class="pi-pr">${fmt(p.precio_total)}</div></div>
       <div class="pi-bot">${estBadge(p.estado)}${(parseFloat(p.precio_total||0)-parseFloat(p.anticipo||0))>0?`<span class="bal">Saldo: ${fmt(parseFloat(p.precio_total||0)-parseFloat(p.anticipo||0))}</span>`:''}</div>
     </div>`).join('');
   };
@@ -1056,14 +1056,14 @@ function verDetalle(p){
   document.getElementById('det-body').innerHTML=`
     <div class="det-card">
       <div class="det-title">${p.cliente}</div>
-      <div class="det-row"><div class="det-l">Producto</div><div class="det-v">${p.descripcion||p.producto||'—'}</div></div>
-      <div class="det-row"><div class="det-l">Técnica</div><div class="det-v">${p.tecnica||'—'}</div></div>
+      <div class="det-row"><div class="det-l">Producto</div><div class="det-v">${p.descripcion||p.producto||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Técnica</div><div class="det-v">${p.tecnica||'-'}</div></div>
       <div class="det-row"><div class="det-l">Tiene diseño</div><div class="det-v">${p.tiene_disenio?'Sí':'No'}</div></div>
       <div class="det-row"><div class="det-l">Precio total</div><div class="det-v">${fmt(p.precio_total)}</div></div>
       <div class="det-row"><div class="det-l">Anticipo</div><div class="det-v ${!p.anticipo||p.anticipo==0?'red':''}">${!p.anticipo||p.anticipo==0?'⚠ Sin anticipo':'$'+parseFloat(p.anticipo).toLocaleString()}</div></div>
       <div class="det-row"><div class="det-l">Saldo</div><div class="det-v ${saldo>0?'red':'green'}">${fmt(saldo)}</div></div>
-      <div class="det-row"><div class="det-l">Fecha pedido</div><div class="det-v">${p.fecha_pedido||'—'}</div></div>
-      <div class="det-row"><div class="det-l">Fecha entrega</div><div class="det-v">${p.fecha_entrega||'—'}</div></div>
+      <div class="det-row"><div class="det-l">Fecha pedido</div><div class="det-v">${p.fecha_pedido||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Fecha entrega</div><div class="det-v">${p.fecha_entrega||'-'}</div></div>
       <div class="det-row"><div class="det-l">Estado</div><div class="det-v purple">${p.estado}</div></div>
       ${p.notas?`<div class="det-row"><div class="det-l">Notas</div><div class="det-v">${p.notas}</div></div>`:''}
       ${p.costo_real>0?`<div class="det-row"><div class="det-l">Costo real</div><div class="det-v red">${fmt(p.costo_real)}</div></div>`:''}
@@ -1098,8 +1098,8 @@ function verDetalle(p){
     const txt=`COTIZACIÓN HOPE EVENTS 💜
 ━━━━━━━━━━━━━━━━
 Cliente: ${p.cliente}
-Producto: ${p.descripcion||p.producto||'—'}
-Técnica: ${p.tecnica||'—'}
+Producto: ${p.descripcion||p.producto||'-'}
+Técnica: ${p.tecnica||'-'}
 ━━━━━━━━━━━━━━━━
 Precio total: $${parseFloat(p.precio_total||0).toLocaleString()}
 Anticipo recibido: $${parseFloat(p.anticipo||0).toLocaleString()}
@@ -1114,7 +1114,7 @@ CONDICIONES:
 ━━━━━━━━━━━━━━━━
 📍 Hermosillo, Sonora
 Instagram: @hopeevents`;
-    navigator.clipboard.writeText(txt).then(()=>toast('📋 Cotización copiada — pega en WhatsApp'));
+    navigator.clipboard.writeText(txt).then(()=>toast('📋 Cotización copiada - pega en WhatsApp'));
   });
   tap(document.getElementById('btn-dup-ped'),async()=>{
     if(!confirm('¿Duplicar este pedido?'))return;
@@ -1138,7 +1138,7 @@ async function cambiarEst(estado){
   await api('pedidos','PATCH',{estado},'?id=eq.'+pedidoActual.id);
   if(estado==='Entregado'&&pedidoActual.precio_total>0){
     await api('finanzas','POST',{tipo:'Ingreso',concepto:'Pedido: '+(pedidoActual.descripcion||pedidoActual.producto||pedidoActual.cliente),categoria:'Venta producto',monto:pedidoActual.precio_total,fecha:iso(),metodo_pago:'Por confirmar'});
-    toast('✅ Entregado — ingreso registrado automáticamente');
+    toast('✅ Entregado - ingreso registrado automáticamente');
   }else toast('✅ Estado: '+estado);
   pedidoActual.estado=estado;
   goP('p-pedidos');
@@ -1208,7 +1208,7 @@ tap(document.getElementById('btn-np3'),()=>{
   npData.tecnica=tecnicaSel;
   npData.productos=productosSel;
   const refPrecio=productosSel.reduce((a,p)=>a+parseFloat(p.precio_base||0),0);
-  document.getElementById('np-costo-ref').textContent=refPrecio>0?`💡 Precio referencia: ${fmt(refPrecio)}`:'💡 Precio variable — calcula en Costos';
+  document.getElementById('np-costo-ref').textContent=refPrecio>0?`💡 Precio referencia: ${fmt(refPrecio)}`:'💡 Precio variable - calcula en Costos';
   document.getElementById('np-fechap').value=iso();
   goP('p-np3');
 });
@@ -1301,7 +1301,7 @@ document.getElementById('ped-busca').addEventListener('input',function(){
     const elH=document.getElementById('ped-historial');
     if(!peds||!peds.length){elA.innerHTML='<div class="empty">Sin resultados</div>';elH.innerHTML='';return;}
     elA.innerHTML=peds.map((p,i)=>`<div class="pi" id="ps${i}">
-      <div class="pi-top"><div><div class="pi-n">${p.cliente}</div><div class="pi-p">${p.descripcion||p.producto||'—'}${p.tecnica?' · '+p.tecnica:''}</div></div><div class="pi-pr">${fmt(p.precio_total)}</div></div>
+      <div class="pi-top"><div><div class="pi-n">${p.cliente}</div><div class="pi-p">${p.descripcion||p.producto||'-'}${p.tecnica?' · '+p.tecnica:''}</div></div><div class="pi-pr">${fmt(p.precio_total)}</div></div>
       <div class="pi-bot">${estBadge(p.estado)}</div>
     </div>`).join('');
     elH.innerHTML='';
@@ -1337,20 +1337,20 @@ async function verCliente(c){
   document.getElementById('detcli-body').innerHTML=`
     <div class="det-card">
       <div class="det-title">${c.nombre}</div>
-      <div class="det-row"><div class="det-l">Teléfono</div><div class="det-v">${c.telefono||'—'}</div></div>
-      <div class="det-row"><div class="det-l">Instagram</div><div class="det-v">${c.instagram||'—'}</div></div>
+      <div class="det-row"><div class="det-l">Teléfono</div><div class="det-v">${c.telefono||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Instagram</div><div class="det-v">${c.instagram||'-'}</div></div>
       <div class="det-row"><div class="det-l">Total gastado</div><div class="det-v purple">${fmt(c.total_gastado)}</div></div>
       <div class="det-row"><div class="det-l">Pedidos</div><div class="det-v">${c.num_pedidos||0}</div></div>
-      <div class="det-row"><div class="det-l">Primera compra</div><div class="det-v">${c.primera_compra||'—'}</div></div>
-      <div class="det-row"><div class="det-l">Última compra</div><div class="det-v">${c.ultima_compra||'—'}</div></div>
-      <div class="det-row"><div class="det-l">Cumpleaños</div><div class="det-v">${c.cumpleanos||'—'}</div></div>
-      <div class="det-row"><div class="det-l">Llegó por</div><div class="det-v">${c.origen||'—'}</div></div>
+      <div class="det-row"><div class="det-l">Primera compra</div><div class="det-v">${c.primera_compra||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Última compra</div><div class="det-v">${c.ultima_compra||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Cumpleaños</div><div class="det-v">${c.cumpleanos||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Llegó por</div><div class="det-v">${c.origen||'-'}</div></div>
       ${c.notas?`<div class="det-row"><div class="det-l">Notas</div><div class="det-v">${c.notas}</div></div>`:''}
     </div>
     <div class="sec">
       <div class="sec-t" style="margin-bottom:10px;">Historial de pedidos</div>
       ${peds&&peds.length?peds.map(p=>`<div class="pi">
-        <div class="pi-top"><div><div class="pi-n">${p.descripcion||p.producto||'—'}</div><div class="pi-p">${p.fecha_pedido||'—'} · ${p.tecnica||''}</div></div><div class="pi-pr">${fmt(p.precio_total)}</div></div>
+        <div class="pi-top"><div><div class="pi-n">${p.descripcion||p.producto||'-'}</div><div class="pi-p">${p.fecha_pedido||'-'} · ${p.tecnica||''}</div></div><div class="pi-pr">${fmt(p.precio_total)}</div></div>
         <div class="pi-bot">${estBadge(p.estado)}</div>
       </div>`).join(''):'<div class="empty">Sin pedidos</div>'}
     </div>
@@ -1441,12 +1441,12 @@ async function loadInventario(){
   if(!mats||!mats.length){el.innerHTML='<div class="empty">Sin materiales. Agrega tu inventario.</div>';return;}
   let matsShow = invFiltroActual==='bajo' ? mats.filter(m=>parseInt(m.stock_actual||0)<=parseInt(m.stock_minimo||0)) : mats;
   const bajos=mats.filter(m=>parseInt(m.stock_actual||0)<=parseInt(m.stock_minimo||0));
-  alertEl.innerHTML=bajos.map(m=>`<div class="alert al-red">⚠️ ${m.nombre} — stock bajo (${m.stock_actual||0} unidades)</div>`).join('');
+  alertEl.innerHTML=bajos.map(m=>`<div class="alert al-red">⚠️ ${m.nombre} - stock bajo (${m.stock_actual||0} unidades)</div>`).join('');
   el.innerHTML=matsShow.map(m=>{
     const bajo=parseInt(m.stock_actual||0)<=parseInt(m.stock_minimo||0);
     return`<div class="list-item">
       <div class="li-top">
-        <div><div class="li-n">${m.nombre}</div><div class="li-sub">${m.categoria||''} · $${parseFloat(m.costo_unitario||0).toLocaleString()}/u · Prov: ${m.proveedor||'—'}</div></div>
+        <div><div class="li-n">${m.nombre}</div><div class="li-sub">${m.categoria||''} · $${parseFloat(m.costo_unitario||0).toLocaleString()}/u · Prov: ${m.proveedor||'-'}</div></div>
         <div style="display:flex;gap:6px;align-items:center;">
           <span class="badge ${bajo?'b-sind':'b-list'}">${bajo?'⚠ Bajo':'OK'}</span>
           <span style="font-size:14px;cursor:pointer;" id="del-mat-${m.id}">🗑</span>
@@ -1690,7 +1690,7 @@ async function loadIdeas(){
   elI.innerHTML=ideas&&ideas.length?ideas.map(i=>`<div class="list-item">
     <div class="li-top"><div><div class="li-n">${i.idea}</div><div class="li-sub">${i.tipo||''} · ${i.prioridad||''}</div></div>
       <div style="display:flex;gap:6px;align-items:center;">
-        <span class="badge ${i.prioridad==='Alta'?'b-sind':i.prioridad==='Media'?'b-prod':'b-pend'}">${i.prioridad||'—'}</span>
+        <span class="badge ${i.prioridad==='Alta'?'b-sind':i.prioridad==='Media'?'b-prod':'b-pend'}">${i.prioridad||'-'}</span>
         <span style="cursor:pointer;font-size:14px;" id="del-idea-${i.id}">🗑</span>
       </div>
     </div>
@@ -1906,10 +1906,7 @@ tap(document.getElementById('btn-add-receta'),async()=>{
   if(!recProducto)return;
   const mats=await api('inventario','GET',null,'?order=nombre.asc&limit=200');
   if(!mats||!mats.length){toast('⚠ Primero agrega materiales al inventario');return;}
-  const opciones=mats.map((m,i)=>i+': '+m.nombre+' ($'+parseFloat(m.costo_unitario||0).toFixed(4)+'/u)').join('
-');
-  const idx=parseInt(prompt('Selecciona material (número):
-'+opciones));
+  const idx=parseInt(prompt('Numero:\n'+mats.map((m,i)=>i+'-'+m.nombre).join('\n')));
   if(isNaN(idx)||idx<0||idx>=mats.length)return;
   const mat=mats[idx];
   const cant=parseFloat(prompt('¿Cuántas unidades de "'+mat.nombre+'" necesitas?')||'0');
@@ -1974,7 +1971,7 @@ tap(document.getElementById('btn-add-fijo'),()=>{
 const origCalcular = document.getElementById('btn-calcular').onclick;
 tap(document.getElementById('btn-ver-fijos'),()=>goP('p-costos-fijos'));
 
-// ── CURSOS MEJORADO — detalle con alumnos ──
+// ── CURSOS MEJORADO - detalle con alumnos ──
 let cursoActual = null;
 
 async function verCurso(c){
@@ -1987,7 +1984,7 @@ async function verCurso(c){
       <div class="det-title">${c.nombre}</div>
       <div class="det-row"><div class="det-l">Fecha</div><div class="det-v">${c.fecha||'Sin fecha'}</div></div>
       <div class="det-row"><div class="det-l">Precio</div><div class="det-v">${fmt(c.precio)}</div></div>
-      <div class="det-row"><div class="det-l">Lugar</div><div class="det-v">${c.lugar||'—'}</div></div>
+      <div class="det-row"><div class="det-l">Lugar</div><div class="det-v">${c.lugar||'-'}</div></div>
       <div class="det-row"><div class="det-l">Cupos</div><div class="det-v">${c.alumnos_inscritos||0}/${c.cupos||0}</div></div>
       <div class="det-row"><div class="det-l">Anticipos recibidos</div><div class="det-v purple">${fmt(anticipos)}</div></div>
       <div class="det-row"><div class="det-l">Ingresos totales</div><div class="det-v green">${fmt(ingTotal)}</div></div>
