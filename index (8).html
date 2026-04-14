@@ -1,0 +1,2313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a0533">
+<title>HopeEvents</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0ebf8;}
+#app{display:flex;flex-direction:column;height:100vh;max-width:430px;margin:0 auto;background:#f0ebf8;}
+#content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.page{display:none;padding:12px 12px 20px;}
+.page.active{display:block;}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:1px solid #e8e0f0;padding:6px 4px 14px;flex-shrink:0;}
+.ni{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:10px;cursor:pointer;transition:background 0.1s;}
+.ni.on{background:#f0ebf8;}
+.ni .ic{font-size:20px;line-height:1;}
+.ni .lb{font-size:10px;color:#888;font-weight:500;}
+.ni.on .lb{color:#7c3aed;font-weight:700;}
+.topbar{background:linear-gradient(135deg,#1a0533,#4a1080);border-radius:16px;padding:14px 16px;margin-bottom:12px;color:white;}
+.topbar .brand{font-size:10px;letter-spacing:0.1em;opacity:0.7;text-transform:uppercase;}
+.topbar .greeting{font-size:20px;font-weight:700;margin:2px 0;}
+.topbar .sub{font-size:12px;opacity:0.7;}
+.cards2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.card{background:#fff;border-radius:14px;padding:14px;border:1px solid #f0ebf8;}
+.card .cl{font-size:11px;color:#888;margin-bottom:4px;}
+.card .cv{font-size:24px;font-weight:700;}
+.card .cs{font-size:11px;color:#aaa;margin-top:2px;}
+.vp{color:#7c3aed;}.vg{color:#059669;}.va{color:#d97706;}.vr{color:#dc2626;}
+.alert{border-radius:12px;padding:10px 13px;margin-bottom:8px;display:flex;align-items:flex-start;gap:8px;font-size:12px;font-weight:500;}
+.al-red{background:#fee2e2;color:#991b1b;}
+.al-yellow{background:#fef3c7;color:#92400e;}
+.al-green{background:#d1fae5;color:#065f46;}
+.al-blue{background:#dbeafe;color:#1e40af;}
+.al-purple{background:#ede9fe;color:#5b21b6;}
+.sec{background:#fff;border-radius:14px;padding:13px;margin-bottom:10px;border:1px solid #f0ebf8;}
+.sec-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.sec-t{font-size:14px;font-weight:700;color:#1a0533;}
+.sec-l{font-size:12px;color:#7c3aed;cursor:pointer;font-weight:500;}
+.pi{padding:10px 0;border-bottom:1px solid #f5f0fb;cursor:pointer;}
+.pi:last-child{border-bottom:none;padding-bottom:0;}
+.pi-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.pi-n{font-size:14px;font-weight:600;color:#1a0533;}
+.pi-p{font-size:12px;color:#888;margin-top:2px;}
+.pi-pr{font-size:14px;font-weight:700;color:#1a0533;white-space:nowrap;margin-left:8px;}
+.pi-bot{display:flex;justify-content:space-between;align-items:center;margin-top:6px;}
+.badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:600;}
+.b-pend{background:#fef3c7;color:#92400e;}
+.b-sind{background:#fee2e2;color:#991b1b;}
+.b-cond{background:#dbeafe;color:#1e40af;}
+.b-prod{background:#ede9fe;color:#5b21b6;}
+.b-list{background:#d1fae5;color:#065f46;}
+.b-entr{background:#f3f4f6;color:#374151;}
+.b-canc{background:#fce7f3;color:#9d174d;}
+.bal{font-size:11px;color:#dc2626;font-weight:500;}
+.tr{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #f5f0fb;cursor:pointer;}
+.tr:last-child{border-bottom:none;}
+.chk{width:20px;height:20px;border-radius:6px;border:2px solid #d1d5db;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all 0.15s;}
+.chk.done{background:#7c3aed;border-color:#7c3aed;}
+.tr-txt{flex:1;}
+.tr-t{font-size:13px;color:#1a0533;font-weight:500;}
+.tr-t.done{color:#aaa;text-decoration:line-through;}
+.tr-sub{font-size:11px;color:#aaa;margin-top:2px;}
+.tcat{font-size:10px;padding:2px 7px;border-radius:10px;flex-shrink:0;}
+.tc-p{background:#ede9fe;color:#5b21b6;}
+.tc-c{background:#fce7f3;color:#9d174d;}
+.tc-a{background:#d1fae5;color:#065f46;}
+.tc-i{background:#fef3c7;color:#92400e;}
+.rap-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.rap{background:#fff;border-radius:14px;padding:14px 10px;border:1px solid #f0ebf8;cursor:pointer;text-align:center;transition:background 0.1s;}
+.rap:active{background:#f0ebf8;}
+.rap .ic{font-size:24px;margin-bottom:5px;}
+.rap .lb{font-size:12px;font-weight:600;color:#1a0533;}
+.page-title{font-size:20px;font-weight:700;color:#1a0533;margin-bottom:16px;}
+.back{font-size:13px;color:#7c3aed;cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-bottom:14px;font-weight:500;}
+.fg{margin-bottom:13px;}
+.fl{font-size:12px;color:#555;margin-bottom:5px;display:block;font-weight:600;}
+.fi{width:100%;padding:11px 13px;border:1.5px solid #e8e0f0;border-radius:11px;font-size:14px;color:#1a0533;background:#fff;outline:none;transition:border 0.15s;}
+.fi:focus{border-color:#7c3aed;}
+.fs{width:100%;padding:11px 13px;border:1.5px solid #e8e0f0;border-radius:11px;font-size:14px;color:#1a0533;background:#fff;outline:none;}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn-p{width:100%;background:#7c3aed;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px;letter-spacing:0.01em;}
+.btn-p:active{background:#6d28d9;}
+.btn-sec{width:100%;background:#fff;color:#7c3aed;border:2px solid #7c3aed;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+.btn-danger{width:100%;background:#fff;color:#dc2626;border:2px solid #dc2626;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+.saldo-box{background:#ede9fe;border-radius:11px;padding:11px 13px;font-size:13px;color:#5b21b6;font-weight:700;margin-top:4px;}
+.warn-box{background:#fee2e2;border-radius:11px;padding:10px 13px;font-size:12px;color:#991b1b;margin-top:8px;}
+.info-box{background:#dbeafe;border-radius:11px;padding:10px 13px;font-size:12px;color:#1e40af;margin-top:8px;}
+.success-box{background:#d1fae5;border-radius:11px;padding:10px 13px;font-size:12px;color:#065f46;margin-top:8px;}
+.det-card{background:#fff;border-radius:14px;padding:14px;border:1px solid #f0ebf8;margin-bottom:10px;}
+.det-title{font-size:17px;font-weight:700;color:#1a0533;margin-bottom:13px;}
+.det-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f5f0fb;}
+.det-row:last-child{border-bottom:none;}
+.det-l{font-size:12px;color:#888;}
+.det-v{font-size:13px;font-weight:600;color:#1a0533;text-align:right;max-width:65%;}
+.det-v.red{color:#dc2626;}.det-v.green{color:#059669;}.det-v.purple{color:#7c3aed;}
+.est-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.btn-est{border:none;border-radius:10px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;color:#fff;}
+.mas-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mas-item{background:#fff;border-radius:14px;padding:16px 12px;border:1px solid #f0ebf8;cursor:pointer;text-align:center;transition:background 0.1s;}
+.mas-item:active{background:#f0ebf8;}
+.mas-ic{font-size:28px;margin-bottom:7px;}
+.mas-lb{font-size:13px;font-weight:700;color:#1a0533;}
+.mas-sub{font-size:11px;color:#888;margin-top:3px;}
+.list-item{padding:12px 0;border-bottom:1px solid #f5f0fb;}
+.list-item:last-child{border-bottom:none;}
+.li-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.li-n{font-size:14px;font-weight:600;color:#1a0533;}
+.li-sub{font-size:12px;color:#888;margin-top:3px;}
+.li-r{text-align:right;}
+.fin-box{background:linear-gradient(135deg,#1a0533,#4a1080);border-radius:14px;padding:16px;margin-bottom:12px;color:#fff;}
+.fin-label{font-size:11px;opacity:0.7;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;}
+.fin-val{font-size:30px;font-weight:700;}
+.fin-sub{font-size:11px;opacity:0.6;margin-top:3px;}
+.deuda-card{border-radius:14px;padding:14px;margin-bottom:10px;}
+.deuda-red{background:#fee2e2;border:1px solid #fca5a5;}
+.deuda-bar-wrap{background:rgba(0,0,0,0.1);border-radius:10px;height:8px;margin:10px 0;overflow:hidden;}
+.deuda-bar-fill{height:100%;border-radius:10px;transition:width 0.3s;}
+.wa-item{padding:13px 0;border-bottom:1px solid #f5f0fb;}
+.wa-item:last-child{border-bottom:none;}
+.wa-t{font-size:13px;font-weight:700;color:#1a0533;margin-bottom:6px;}
+.wa-txt{font-size:12px;color:#555;line-height:1.6;background:#f9f5ff;border-radius:10px;padding:10px;}
+.wa-copy{display:inline-block;font-size:12px;color:#7c3aed;cursor:pointer;margin-top:6px;font-weight:600;}
+.mov-item{padding:10px 0;border-bottom:1px solid #f5f0fb;display:flex;justify-content:space-between;align-items:center;}
+.mov-item:last-child{border-bottom:none;}
+.mov-l .mc{font-size:13px;font-weight:600;color:#1a0533;}
+.mov-l .md{font-size:11px;color:#aaa;margin-top:2px;}
+.mov-amt{font-size:15px;font-weight:700;}
+.ing{color:#059669;}.gas{color:#dc2626;}
+.cli-item{padding:11px 0;border-bottom:1px solid #f5f0fb;cursor:pointer;}
+.cli-item:last-child{border-bottom:none;}
+.cli-top{display:flex;justify-content:space-between;align-items:center;}
+.cli-n{font-size:14px;font-weight:600;color:#1a0533;}
+.cli-sub{font-size:12px;color:#888;margin-top:3px;}
+.rank-bar{background:#f0ebf8;border-radius:20px;height:6px;margin-top:6px;overflow:hidden;}
+.rank-fill{height:100%;background:#7c3aed;border-radius:20px;}
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.prod-btn{background:#fff;border:2px solid #e8e0f0;border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.1s;}
+.prod-btn.sel{border-color:#7c3aed;background:#f0ebf8;}
+.prod-btn .pn{font-size:13px;font-weight:600;color:#1a0533;}
+.prod-btn .pp{font-size:11px;color:#888;margin-top:2px;}
+.tecnica-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.tec-tab{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;background:#fff;border:1.5px solid #e8e0f0;color:#555;transition:all 0.1s;}
+.tec-tab.sel{background:#7c3aed;color:#fff;border-color:#7c3aed;}
+.empty{text-align:center;padding:2rem 0;color:#aaa;font-size:13px;}
+.loading{text-align:center;padding:1.5rem;color:#aaa;font-size:13px;}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#1a0533;color:#fff;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:500;z-index:9999;pointer-events:none;opacity:0;transition:opacity 0.2s;}
+.toast.show{opacity:1;}
+.nota-card{border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer;}
+.nota-yellow{background:#fef3c7;}
+.nota-purple{background:#ede9fe;}
+.nota-green{background:#d1fae5;}
+.nota-pink{background:#fce7f3;}
+.fecha-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f5f0fb;cursor:pointer;}
+.fecha-item:last-child{border-bottom:none;}
+.fecha-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.dot-alta{background:#7c3aed;}.dot-media{background:#d97706;}
+.fecha-info .fn{font-size:13px;font-weight:600;color:#1a0533;}
+.fecha-info .fd{font-size:11px;color:#888;margin-top:2px;}
+.fecha-dias{font-size:12px;font-weight:700;color:#7c3aed;margin-left:auto;}
+.costo-resultado{background:#1a0533;border-radius:14px;padding:14px;color:#fff;margin-top:12px;}
+.cr-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px;}
+.cr-total{display:flex;justify-content:space-between;padding:10px 0 4px;font-size:15px;font-weight:700;border-top:1px solid rgba(255,255,255,0.2);margin-top:6px;}
+.stat-card{background:#fff;border-radius:14px;padding:14px;border:1px solid #f0ebf8;margin-bottom:10px;}
+.stat-title{font-size:13px;font-weight:700;color:#1a0533;margin-bottom:10px;}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f5f0fb;}
+.stat-row:last-child{border-bottom:none;}
+.stat-l{font-size:13px;color:#555;}
+.stat-r{font-size:13px;font-weight:700;color:#1a0533;}
+.bar-wrap{flex:1;margin:0 10px;}
+.bar{height:6px;background:#f0ebf8;border-radius:10px;overflow:hidden;}
+.bar-fill{height:100%;background:#7c3aed;border-radius:10px;}
+.scr-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.btn-new{background:#7c3aed;color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;}
+.cont-item{padding:12px 0;border-bottom:1px solid #f5f0fb;cursor:pointer;}
+.cont-item:last-child{border-bottom:none;}
+.caption-box{background:#f9f5ff;border-radius:10px;padding:10px;font-size:13px;line-height:1.7;color:#1a0533;white-space:pre-wrap;word-break:break-word;margin-top:8px;}
+.mejora-item{padding:9px 0;border-bottom:1px solid #f5f0fb;display:flex;align-items:center;gap:10px;}
+.mejora-item:last-child{border-bottom:none;}
+.dtf-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;}
+.dtf-table th{background:#7c3aed;color:#fff;padding:7px 8px;text-align:left;}
+.dtf-table td{padding:7px 8px;border-bottom:1px solid #f0ebf8;color:#1a0533;}
+.dtf-table tr:last-child td{border-bottom:none;}
+.dtf-table tr:nth-child(even) td{background:#f9f5ff;}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="content">
+
+<!-- HOME -->
+<div class="page active" id="p-home">
+  <div class="topbar">
+    <div class="brand">Hope Events Sistema</div>
+    <div class="greeting">Hola, Hope 👋</div>
+    <div class="sub" id="home-fecha"></div>
+  </div>
+  <div id="home-alertas"></div>
+  <div id="home-contenido-hoy"></div>
+  <div class="rap-grid">
+    <div class="rap" id="r-pedido"><div class="ic">📦</div><div class="lb">Nuevo pedido</div></div>
+    <div class="rap" id="r-pago"><div class="ic">💸</div><div class="lb">Registrar pago</div></div>
+    <div class="rap" id="r-cont"><div class="ic">📱</div><div class="lb">Idea contenido</div></div>
+    <div class="rap" id="r-nota"><div class="ic">📝</div><div class="lb">Nota rápida</div></div>
+  </div>
+  <div class="cards2">
+    <div class="card"><div class="cl">Ventas del mes</div><div class="cv vg" id="c-ventas">$0</div><div class="cs" id="c-mes">abril</div></div>
+    <div class="card"><div class="cl">Por cobrar</div><div class="cv va" id="c-cobrar">$0</div><div class="cs">saldos pendientes</div></div>
+    <div class="card"><div class="cl">Pedidos activos</div><div class="cv vp" id="c-pedidos">0</div><div class="cs" id="c-sin">cargando...</div></div>
+    <div class="card"><div class="cl">Fondo ahorro 10%</div><div class="cv vp" id="c-ahorro">$0</div><div class="cs">acumulado</div></div>
+  </div>
+  <div class="sec">
+    <div class="sec-h"><div class="sec-t">Pedidos activos</div><div class="sec-l" id="hl-pedidos">ver todos →</div></div>
+    <div id="home-pedidos"><div class="loading">Cargando...</div></div>
+  </div>
+  <div class="sec">
+    <div class="sec-h"><div class="sec-t">Tareas del día</div><div class="sec-l" id="hl-tarea">+ agregar</div></div>
+    <div id="home-tareas"><div class="loading">Cargando...</div></div>
+  </div>
+  <div class="sec">
+    <div class="sec-h"><div class="sec-t">Próximas fechas</div><div class="sec-l" id="hl-fechas">ver todas →</div></div>
+    <div id="home-fechas"><div class="loading">Cargando...</div></div>
+  </div>
+</div>
+
+<!-- PEDIDOS LIST -->
+<div class="page" id="p-pedidos">
+  <div class="scr-head"><div class="page-title">Pedidos</div><button class="btn-new" id="btn-npedido">+ Nuevo</button></div>
+  <div class="sec" style="margin-bottom:10px;"><input class="fi" id="ped-busca" placeholder="Buscar por cliente..."></div>
+  <div class="sec"><div class="sec-h"><div class="sec-t">Activos</div></div><div id="ped-activos"><div class="loading">Cargando...</div></div></div>
+  <div class="sec"><div class="sec-h"><div class="sec-t">Historial</div></div><div id="ped-historial"><div class="loading">Cargando...</div></div></div>
+</div>
+
+<!-- NUEVO PEDIDO - PASO 1: CLIENTE -->
+<div class="page" id="p-np1">
+  <span class="back" id="b-np1">← Pedidos</span>
+  <div class="page-title">Nuevo pedido</div>
+  <div class="sec">
+    <div style="font-size:12px;font-weight:700;color:#7c3aed;margin-bottom:10px;">PASO 1 — Cliente</div>
+    <div class="fg"><label class="fl">Buscar cliente existente</label><input class="fi" id="np-busca" placeholder="Escribe el nombre..."></div>
+    <div id="np-cliente-sugs" style="margin-bottom:8px;"></div>
+    <div id="np-cliente-sel" class="info-box" style="display:none;margin-bottom:10px;"></div>
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="np-nombre" placeholder="Nombre completo o busca arriba"></div>
+    <div class="fg"><label class="fl">Teléfono</label><input class="fi" id="np-tel" placeholder="662 123 4567" type="tel"></div>
+    <button class="btn-p" id="btn-np2">Siguiente →</button>
+  </div>
+</div>
+
+<!-- NUEVO PEDIDO - PASO 2: PRODUCTO -->
+<div class="page" id="p-np2">
+  <span class="back" id="b-np2">← Cliente</span>
+  <div class="page-title">¿Qué técnica?</div>
+  <div class="tecnica-tabs" id="tec-tabs"></div>
+  <div class="page-title" style="font-size:14px;margin-bottom:10px;">Selecciona el producto</div>
+  <div class="prod-grid" id="prod-grid"></div>
+  <button class="btn-p" id="btn-np3">Siguiente →</button>
+</div>
+
+<!-- NUEVO PEDIDO - PASO 3: DETALLES -->
+<div class="page" id="p-np3">
+  <span class="back" id="b-np3">← Producto</span>
+  <div class="page-title">Detalles del pedido</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Descripción / especificaciones</label><input class="fi" id="np-desc" placeholder="Ej: taza con foto de pareja, fondo azul..."></div>
+    <div class="fg"><label class="fl">¿Tiene diseño?</label>
+      <select class="fs" id="np-disenio"><option value="false">No — yo hago el diseño</option><option value="true">Sí — el cliente tiene diseño</option></select>
+    </div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Fecha pedido</label><input class="fi" type="date" id="np-fechap"></div>
+      <div class="fg"><label class="fl">Fecha entrega</label><input class="fi" type="date" id="np-fechae"></div>
+    </div>
+    <div class="fg"><label class="fl">Notas internas</label><input class="fi" id="np-notas" placeholder="Notas que solo ves tú..."></div>
+    <button class="btn-p" id="btn-np4">Siguiente →</button>
+  </div>
+</div>
+
+<!-- NUEVO PEDIDO - PASO 4: PRECIO -->
+<div class="page" id="p-np4">
+  <span class="back" id="b-np4">← Detalles</span>
+  <div class="page-title">Precio y anticipo</div>
+  <div class="sec">
+    <div id="np-costo-ref" class="info-box" style="margin-bottom:12px;"></div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Precio total ($) *</label><input class="fi" type="number" id="np-precio" placeholder="0"></div>
+      <div class="fg"><label class="fl">Anticipo ($)</label><input class="fi" type="number" id="np-anticipo" placeholder="0"></div>
+    </div>
+    <div class="saldo-box" id="np-saldo">Saldo: $0.00</div>
+    <div class="warn-box" id="np-warn-ant" style="display:none;">⚠️ Sin anticipo no se inicia el trabajo</div>
+    <div class="fg" style="margin-top:12px;"><label class="fl">Método de pago anticipo</label>
+      <select class="fs" id="np-metodo"><option value="">...</option><option>Efectivo</option><option>Transferencia</option><option>CoDi</option></select>
+    </div>
+    <button class="btn-p" id="btn-guardar-pedido">Guardar pedido 🎉</button>
+  </div>
+</div>
+
+<!-- DETALLE PEDIDO -->
+<div class="page" id="p-detalle">
+  <span class="back" id="b-detalle">← Pedidos</span>
+  <div id="det-body"></div>
+</div>
+
+<!-- REGISTRAR PAGO EN PEDIDO -->
+<div class="page" id="p-reg-pago">
+  <span class="back" id="b-reg-pago">← Detalle</span>
+  <div class="page-title">Registrar pago</div>
+  <div class="sec">
+    <div id="reg-pago-info" class="info-box" style="margin-bottom:12px;"></div>
+    <div class="fg"><label class="fl">Monto a registrar ($) *</label><input class="fi" type="number" id="rp-monto" placeholder="0"></div>
+    <div class="fg"><label class="fl">Método de pago</label>
+      <select class="fs" id="rp-metodo"><option value="">...</option><option>Efectivo</option><option>Transferencia</option><option>CoDi</option><option>Tarjeta</option></select>
+    </div>
+    <div class="fg"><label class="fl">Tipo de pago</label>
+      <select class="fs" id="rp-tipo"><option value="anticipo">Anticipo</option><option value="saldo">Pago de saldo</option><option value="completo">Pago completo</option></select>
+    </div>
+    <div class="fg"><label class="fl">Notas</label><input class="fi" id="rp-notas" placeholder="Opcional..."></div>
+    <button class="btn-p" id="btn-guardar-pago">Registrar pago ✅</button>
+  </div>
+</div>
+
+<!-- EDITAR PEDIDO -->
+<div class="page" id="p-editar">
+  <span class="back" id="b-editar">← Detalle</span>
+  <div class="page-title">Editar pedido</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Cliente</label><input class="fi" id="ep-cliente"></div>
+    <div class="fg"><label class="fl">Teléfono</label><input class="fi" id="ep-tel" type="tel"></div>
+    <div class="fg"><label class="fl">Descripción</label><input class="fi" id="ep-desc"></div>
+    <div class="fg"><label class="fl">¿Tiene diseño?</label>
+      <select class="fs" id="ep-disenio"><option value="false">No</option><option value="true">Sí</option></select>
+    </div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Precio total ($)</label><input class="fi" type="number" id="ep-precio"></div>
+      <div class="fg"><label class="fl">Anticipo ($)</label><input class="fi" type="number" id="ep-anticipo"></div>
+    </div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Fecha pedido</label><input class="fi" type="date" id="ep-fechap"></div>
+      <div class="fg"><label class="fl">Fecha entrega</label><input class="fi" type="date" id="ep-fechae"></div>
+    </div>
+    <div class="fg"><label class="fl">Notas</label><input class="fi" id="ep-notas"></div>
+    <button class="btn-p" id="btn-actualizar">Guardar cambios</button>
+  </div>
+</div>
+
+<!-- CLIENTES -->
+<div class="page" id="p-clientes">
+  <div class="scr-head"><div class="page-title">Clientes</div><button class="btn-new" id="btn-ncliente">+ Nuevo</button></div>
+  <div class="sec" style="margin-bottom:10px;"><input class="fi" id="cli-busca" placeholder="Buscar cliente..."></div>
+  <div class="sec"><div id="lista-clientes"><div class="loading">Cargando...</div></div></div>
+</div>
+
+<!-- NUEVO CLIENTE -->
+<div class="page" id="p-ncliente">
+  <span class="back" id="b-ncliente">← Clientes</span>
+  <div class="page-title">Nuevo cliente</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="nc-nombre" placeholder="Nombre completo"></div>
+    <div class="fg"><label class="fl">Teléfono</label><input class="fi" id="nc-tel" placeholder="662 123 4567" type="tel"></div>
+    <div class="fg"><label class="fl">Instagram</label><input class="fi" id="nc-ig" placeholder="@usuario"></div>
+    <div class="fg"><label class="fl">Cumpleaños</label><input class="fi" type="date" id="nc-cumple"></div>
+    <div class="fg"><label class="fl">¿Cómo llegó?</label>
+      <select class="fs" id="nc-origen"><option value="">...</option><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>WhatsApp</option><option>Recomendación</option><option>Otro</option></select>
+    </div>
+    <div class="fg"><label class="fl">Notas</label><input class="fi" id="nc-notas" placeholder="Qué le gusta, ocasiones especiales..."></div>
+    <button class="btn-p" id="btn-guardar-cliente">Guardar cliente</button>
+  </div>
+</div>
+
+<!-- DETALLE CLIENTE -->
+<div class="page" id="p-detcli">
+  <span class="back" id="b-detcli">← Clientes</span>
+  <div id="detcli-body"></div>
+</div>
+
+<!-- EDITAR CLIENTE -->
+<div class="page" id="p-editar-cli">
+  <span class="back" id="b-editar-cli">← Cliente</span>
+  <div class="page-title">Editar cliente</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="ecli-nombre"></div>
+    <div class="fg"><label class="fl">Teléfono</label><input class="fi" id="ecli-tel" type="tel"></div>
+    <div class="fg"><label class="fl">Instagram</label><input class="fi" id="ecli-ig"></div>
+    <div class="fg"><label class="fl">Cumpleaños</label><input class="fi" type="date" id="ecli-cumple"></div>
+    <div class="fg"><label class="fl">Notas</label><input class="fi" id="ecli-notas"></div>
+    <button class="btn-p" id="btn-actualizar-cli">Guardar cambios</button>
+  </div>
+</div>
+
+<!-- DINERO -->
+<div class="page" id="p-dinero">
+  <div class="scr-head"><div class="page-title">Dinero</div><button class="btn-new" id="btn-nmov">+ Registrar</button></div>
+  <div class="fin-box">
+    <div class="fin-label">Fondo de ahorro acumulado (10%)</div>
+    <div class="fin-val" id="fin-ahorro">$0.00</div>
+    <div class="fin-sub">Meta mensual: $600 para recuperar tu fondo</div>
+  </div>
+  <div class="cards2">
+    <div class="card"><div class="cl">Ingresos este mes</div><div class="cv vg" id="fin-ing">$0</div></div>
+    <div class="card"><div class="cl">Gastos este mes</div><div class="cv vr" id="fin-gas">$0</div></div>
+    <div class="card"><div class="cl">Utilidad</div><div class="cv vp" id="fin-util">$0</div></div>
+    <div class="card"><div class="cl">Por cobrar</div><div class="cv va" id="fin-cobrar2">$0</div></div>
+  </div>
+  <!-- DEUDAS -->
+  <div class="sec">
+    <div class="sec-h"><div class="sec-t">💳 Deudas y tarjetas</div><div class="sec-l" id="hl-deudas">ver todo →</div></div>
+    <div id="home-deudas"><div class="loading">Cargando...</div></div>
+  </div>
+  <div class="sec"><div class="sec-h"><div class="sec-t">Movimientos del mes</div></div><div id="lista-movs"><div class="loading">Cargando...</div></div></div>
+</div>
+
+<!-- NUEVO MOVIMIENTO -->
+<div class="page" id="p-nmov">
+  <span class="back" id="b-nmov">← Dinero</span>
+  <div class="page-title">Registrar movimiento</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Tipo *</label><select class="fs" id="nm-tipo"><option value="">Selecciona...</option><option>Ingreso</option><option>Gasto</option></select></div>
+    <div class="fg"><label class="fl">Concepto *</label><input class="fi" id="nm-concepto" placeholder="¿De qué es?"></div>
+    <div class="fg"><label class="fl">Categoría</label><select class="fs" id="nm-cat"><option value="">...</option><option>Venta producto</option><option>Anticipo</option><option>Saldo pedido</option><option>Curso</option><option>Material</option><option>Equipo</option><option>Servicios</option><option>Fondo ahorro</option><option>Otros</option></select></div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Monto ($) *</label><input class="fi" type="number" id="nm-monto" placeholder="0"></div>
+      <div class="fg"><label class="fl">Método</label><select class="fs" id="nm-metodo"><option value="">...</option><option>Efectivo</option><option>Transferencia</option><option>Tarjeta</option><option>CoDi</option></select></div>
+    </div>
+    <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="nm-fecha"></div>
+    <div class="fg"><label class="fl">Notas</label><input class="fi" id="nm-notas" placeholder="Opcional..."></div>
+    <button class="btn-p" id="btn-guardar-mov">Guardar</button>
+  </div>
+</div>
+
+<!-- DEUDAS -->
+<div class="page" id="p-deudas">
+  <span class="back" id="b-deudas">← Dinero</span>
+  <div class="scr-head"><div class="page-title">💳 Deudas</div><button class="btn-new" id="btn-ndeuda">+ Nueva deuda</button></div>
+  <div id="alerta-deuda"></div>
+  <div id="lista-deudas"><div class="loading">Cargando...</div></div>
+</div>
+
+<!-- NUEVA DEUDA -->
+<div class="page" id="p-ndeuda">
+  <span class="back" id="b-ndeuda">← Deudas</span>
+  <div class="page-title">Nueva deuda / tarjeta</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="nd-nombre" placeholder="Ej: Tarjeta negocio Citibanamex"></div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Límite ($)</label><input class="fi" type="number" id="nd-limite" placeholder="0"></div>
+      <div class="fg"><label class="fl">Saldo usado ($)</label><input class="fi" type="number" id="nd-saldo" placeholder="0"></div>
+    </div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Pago mínimo ($)</label><input class="fi" type="number" id="nd-pago" placeholder="0"></div>
+      <div class="fg"><label class="fl">Fecha de corte (día)</label><input class="fi" type="number" id="nd-corte" placeholder="7"></div>
+    </div>
+    <div class="fg"><label class="fl">Fecha límite de pago</label><input class="fi" type="date" id="nd-fechapago"></div>
+    <div class="fg"><label class="fl">Notas</label><input class="fi" id="nd-notas" placeholder="Opcional..."></div>
+    <button class="btn-p" id="btn-guardar-deuda">Guardar</button>
+  </div>
+</div>
+
+<!-- MAS -->
+<div class="page" id="p-mas">
+  <div class="page-title">Módulos</div>
+  <div style="font-size:12px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Taller</div>
+  <div class="mas-grid" style="margin-bottom:14px;">
+    <div class="mas-item" id="ir-taller"><div class="mas-ic">🧪</div><div class="mas-lb">Producción</div><div class="mas-sub">Inventario + Recetas</div></div>
+    <div class="mas-item" id="ir-costos"><div class="mas-ic">💰</div><div class="mas-lb">Costos</div><div class="mas-sub">Calculadora real</div></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Crear</div>
+  <div class="mas-grid" style="margin-bottom:14px;">
+    <div class="mas-item" id="ir-contenido"><div class="mas-ic">📱</div><div class="mas-lb">Contenido</div><div class="mas-sub">Calendario + Ideas</div></div>
+    <div class="mas-item" id="ir-ia"><div class="mas-ic">🤖</div><div class="mas-lb">Asistente IA</div><div class="mas-sub">Captions + Ideas</div></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Organizar</div>
+  <div class="mas-grid" style="margin-bottom:14px;">
+    <div class="mas-item" id="ir-agenda"><div class="mas-ic">📋</div><div class="mas-lb">Agenda</div><div class="mas-sub">Tareas + Mejora continua</div></div>
+    <div class="mas-item" id="ir-cursos"><div class="mas-ic">🎓</div><div class="mas-lb">Cursos</div><div class="mas-sub">Talleres + Alumnos</div></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Negocio</div>
+  <div class="mas-grid">
+    <div class="mas-item" id="ir-comunicacion"><div class="mas-ic">💬</div><div class="mas-lb">Comunicación</div><div class="mas-sub">WhatsApp + Cotizaciones</div></div>
+    <div class="mas-item" id="ir-analytics"><div class="mas-ic">📊</div><div class="mas-lb">Analytics</div><div class="mas-sub">Estadísticas</div></div>
+    <div class="mas-item" id="ir-proveedores"><div class="mas-ic">🏭</div><div class="mas-lb">Proveedores</div><div class="mas-sub">Directorio</div></div>
+    <div class="mas-item" id="ir-catalogo"><div class="mas-ic">🛍️</div><div class="mas-lb">Catálogo</div><div class="mas-sub">Productos + precios</div></div>
+    <div class="mas-item" id="ir-ideas"><div class="mas-ic">💡</div><div class="mas-lb">Ideas + Notas</div><div class="mas-sub">Brainstorm</div></div>
+  </div>
+</div>
+
+<!-- TALLER -->
+<div class="page" id="p-taller">
+  <span class="back" id="b-taller">← Módulos</span>
+  <div class="scr-head"><div class="page-title">Producción</div><button class="btn-new" id="btn-nmat">+ Material</button></div>
+  <div id="inv-alertas"></div>
+  <div class="tecnica-tabs" id="inv-filtros" style="margin-bottom:10px;">
+    <div class="tec-tab sel" data-f="todos">Todos</div>
+    <div class="tec-tab" data-f="bajo">⚠ Stock bajo</div>
+    <div class="tec-tab" data-f="Sublimacion">Sublimación</div>
+    <div class="tec-tab" data-f="DTF">DTF</div>
+    <div class="tec-tab" data-f="Vinil">Vinil</div>
+    <div class="tec-tab" data-f="Papeleria">Papelería</div>
+    <div class="tec-tab" data-f="Empaque">Empaque</div>
+  </div>
+  <div class="sec"><div id="lista-inv"><div class="loading">Cargando...</div></div></div>
+</div>
+
+<!-- EDITAR MATERIAL -->
+<div class="page" id="p-emat">
+  <span class="back" id="b-emat">← Producción</span>
+  <div class="page-title">Editar material</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="emat-n"></div>
+    <div class="fg"><label class="fl">Categoría</label><select class="fs" id="emat-cat"><option value="">...</option><option>Sublimacion</option><option>DTF</option><option>Vinil</option><option>Papeleria</option><option>Empaque</option><option>Otros</option></select></div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Stock actual</label><input class="fi" type="number" id="emat-stock"></div>
+      <div class="fg"><label class="fl">Stock mínimo</label><input class="fi" type="number" id="emat-min"></div>
+    </div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Costo unitario ($)</label><input class="fi" type="number" id="emat-costo"></div>
+      <div class="fg"><label class="fl">Proveedor</label><input class="fi" id="emat-prov"></div>
+    </div>
+    <button class="btn-p" id="btn-actualizar-mat">Guardar cambios</button>
+  </div>
+</div>
+
+<!-- NUEVO MATERIAL -->
+<div class="page" id="p-nmat">
+  <span class="back" id="b-nmat">← Producción</span>
+  <div class="page-title">Nuevo material</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="nmat-n" placeholder="Ej: Hoja sublimación A4"></div>
+    <div class="fg"><label class="fl">Categoría</label><select class="fs" id="nmat-cat"><option value="">...</option><option>Sublimacion</option><option>DTF</option><option>Vinil</option><option>Papeleria</option><option>Empaque</option><option>Otros</option></select></div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Stock actual</label><input class="fi" type="number" id="nmat-stock" placeholder="0"></div>
+      <div class="fg"><label class="fl">Stock mínimo</label><input class="fi" type="number" id="nmat-min" placeholder="5"></div>
+    </div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Costo unitario ($)</label><input class="fi" type="number" id="nmat-costo" placeholder="0.00"></div>
+      <div class="fg"><label class="fl">Proveedor</label><input class="fi" id="nmat-prov" placeholder="Nombre"></div>
+    </div>
+    <button class="btn-p" id="btn-guardar-mat">Guardar material</button>
+  </div>
+</div>
+
+<!-- COSTOS -->
+<div class="page" id="p-costos">
+  <span class="back" id="b-costos">← Módulos</span>
+  <div class="page-title">Calculadora de costos</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Producto a calcular</label>
+      <select class="fs" id="calc-prod"><option value="">Selecciona...</option></select>
+    </div>
+    <div class="tecnica-tabs" id="costos-tec-tabs" style="margin-bottom:8px;">
+      <div class="tec-tab sel" data-ct="calc">🧮 Calculadora</div>
+      <div class="tec-tab" data-ct="dtf">📋 Tabla DTF</div>
+    </div>
+    <div id="calc-form">
+      <div style="font-size:12px;font-weight:700;color:#7c3aed;margin:8px 0;">Tiempo de producción</div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Diseño (min)</label><input class="fi" type="number" id="calc-dis" placeholder="0" value="0"></div>
+        <div class="fg"><label class="fl">Producción (min)</label><input class="fi" type="number" id="calc-prod-min" placeholder="0" value="0"></div>
+      </div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Empaque (min)</label><input class="fi" type="number" id="calc-emp" placeholder="0" value="0"></div>
+        <div class="fg"><label class="fl">Fotos (min)</label><input class="fi" type="number" id="calc-foto" placeholder="0" value="0"></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:#7c3aed;margin:8px 0;">Herramientas y máquinas</div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Costo máquina/uso ($)</label><input class="fi" type="number" id="calc-maq" placeholder="0" value="0"></div>
+        <div class="fg"><label class="fl">Costo energía ($)</label><input class="fi" type="number" id="calc-luz" placeholder="0" value="0"></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:#7c3aed;margin:8px 0;">Porcentajes adicionales</div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">% Error</label><input class="fi" type="number" id="calc-err" value="5"></div>
+        <div class="fg"><label class="fl">% Emergencia</label><input class="fi" type="number" id="calc-emerg" value="5"></div>
+      </div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">% Publicidad</label><input class="fi" type="number" id="calc-pub" value="0"></div>
+        <div class="fg"><label class="fl">% Margen mínimo</label><input class="fi" type="number" id="calc-margen" value="100"></div>
+      </div>
+      <div class="fg" style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+        <input type="checkbox" id="calc-envio" style="width:18px;height:18px;cursor:pointer;">
+        <label class="fl" style="margin:0;cursor:pointer;" for="calc-envio">Incluye envío/domicilio</label>
+      </div>
+      <div class="fg" id="calc-envio-wrap" style="display:none;"><label class="fl">Costo envío ($)</label><input class="fi" type="number" id="calc-costo-envio" placeholder="0"></div>
+      <button class="btn-sec" id="btn-ver-fijos" style="margin-top:0;">⚙️ Ver/editar costos fijos</button>
+      <button class="btn-p" id="btn-calcular">Calcular precio</button>
+      <div class="costo-resultado" id="calc-resultado" style="display:none;"></div>
+    </div>
+    <div id="dtf-table-wrap" style="display:none;">
+      <div class="alert al-purple" style="margin-bottom:10px;">💡 Precios de referencia DTF para calcular tu cotización</div>
+      <table class="dtf-table">
+        <thead><tr><th>Tamaño</th><th>Costo film ($)</th><th>+Tinta ($)</th><th>Total mat.</th><th>Precio sugerido</th></tr></thead>
+        <tbody>
+          <tr><td>5×5 cm</td><td>$2.50</td><td>$1.50</td><td>$4.00</td><td>$30–50</td></tr>
+          <tr><td>10×10 cm</td><td>$5.00</td><td>$3.00</td><td>$8.00</td><td>$50–80</td></tr>
+          <tr><td>15×20 cm</td><td>$12.00</td><td>$7.00</td><td>$19.00</td><td>$80–120</td></tr>
+          <tr><td>20×25 cm</td><td>$18.00</td><td>$10.00</td><td>$28.00</td><td>$100–150</td></tr>
+          <tr><td>30×30 cm</td><td>$28.00</td><td>$15.00</td><td>$43.00</td><td>$150–220</td></tr>
+          <tr><td>30×40 cm</td><td>$38.00</td><td>$20.00</td><td>$58.00</td><td>$200–300</td></tr>
+          <tr><td>A4 (21×29)</td><td>$32.00</td><td>$18.00</td><td>$50.00</td><td>$180–250</td></tr>
+          <tr><td>A3 (29×42)</td><td>$55.00</td><td>$30.00</td><td>$85.00</td><td>$250–380</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:11px;color:#888;margin-top:8px;">* Precios de materiales estimados. Ajusta según tu proveedor. Los precios sugeridos incluyen mano de obra, margen y costos fijos.</div>
+      <div style="font-size:12px;font-weight:700;color:#7c3aed;margin:12px 0 6px;">Costo por metro lineal de film DTF</div>
+      <table class="dtf-table">
+        <thead><tr><th>Ancho rollo</th><th>$/metro</th><th>Rendimiento aprox.</th></tr></thead>
+        <tbody>
+          <tr><td>30 cm</td><td>$45–60</td><td>~4 diseños A4</td></tr>
+          <tr><td>60 cm</td><td>$85–110</td><td>~8 diseños A4</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- COSTOS FIJOS -->
+<div class="page" id="p-costos-fijos">
+  <span class="back" id="b-costos-fijos">← Costos</span>
+  <div class="page-title">Costos fijos mensuales</div>
+  <div class="sec">
+    <div class="alert al-blue">💡 Estos costos se usan en la calculadora para el precio sugerido</div>
+    <div id="lista-fijos"></div>
+    <button class="btn-p" id="btn-add-fijo" style="margin-top:10px;">+ Agregar costo fijo</button>
+  </div>
+</div>
+
+<!-- CONTENIDO -->
+<div class="page" id="p-contenido">
+  <span class="back" id="b-contenido">← Módulos</span>
+  <div class="scr-head"><div class="page-title">Contenido</div><button class="btn-new" id="btn-ncont">+ Idea</button></div>
+  <div class="tecnica-tabs" id="cont-filtros" style="margin-bottom:8px;">
+    <div class="tec-tab sel" data-cf="todos">Todos</div>
+    <div class="tec-tab" data-cf="pendiente">Pendiente</div>
+    <div class="tec-tab" data-cf="Publicado">Publicado</div>
+  </div>
+  <div class="sec"><div id="lista-cont"><div class="loading">Cargando...</div></div></div>
+</div>
+
+<!-- DETALLE CONTENIDO -->
+<div class="page" id="p-det-cont">
+  <span class="back" id="b-det-cont">← Contenido</span>
+  <div id="det-cont-body"></div>
+</div>
+
+<!-- NUEVO CONTENIDO -->
+<div class="page" id="p-ncont">
+  <span class="back" id="b-ncont">← Contenido</span>
+  <div class="page-title">Nueva idea de contenido</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Tema *</label><input class="fi" id="nc-tema" placeholder="¿De qué trata?"></div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Plataforma</label><select class="fs" id="nc-plat"><option value="">...</option><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>WhatsApp</option><option>Todos</option></select></div>
+      <div class="fg"><label class="fl">Formato</label><select class="fs" id="nc-fmt"><option value="">...</option><option>Reel</option><option>Foto estática</option><option>Carrusel</option><option>Story</option><option>Video</option><option>Live</option></select></div>
+    </div>
+    <div class="fg"><label class="fl">Tipo</label><select class="fs" id="nc-tipo"><option value="">...</option><option>Día del Niño</option><option>Bazar</option><option>Curso de IA</option><option>Día de las Madres</option><option>Contenido de valor</option><option>Marca / Proceso</option><option>Producto</option><option>Testimonio</option></select></div>
+    <div class="fg"><label class="fl">Fecha planificada</label><input class="fi" type="date" id="nc-fecha"></div>
+    <div class="fg"><label class="fl">Caption / copy completo</label><textarea class="fi" id="nc-caption" placeholder="Escribe el caption completo aquí..." style="height:100px;resize:none;"></textarea></div>
+    <div class="fg"><label class="fl">Estado</label><select class="fs" id="nc-estado"><option value="pendiente">Pendiente</option><option>En proceso</option><option>Publicado</option></select></div>
+    <button class="btn-p" id="btn-guardar-cont">Guardar</button>
+  </div>
+</div>
+
+<!-- EDITAR CONTENIDO -->
+<div class="page" id="p-editar-cont">
+  <span class="back" id="b-editar-cont">← Detalle</span>
+  <div class="page-title">Editar contenido</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Tema *</label><input class="fi" id="econt-tema"></div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Plataforma</label><select class="fs" id="econt-plat"><option value="">...</option><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>WhatsApp</option><option>Todos</option></select></div>
+      <div class="fg"><label class="fl">Formato</label><select class="fs" id="econt-fmt"><option value="">...</option><option>Reel</option><option>Foto estática</option><option>Carrusel</option><option>Story</option><option>Video</option></select></div>
+    </div>
+    <div class="fg"><label class="fl">Tipo</label><input class="fi" id="econt-tipo"></div>
+    <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="econt-fecha"></div>
+    <div class="fg"><label class="fl">Caption</label><textarea class="fi" id="econt-caption" style="height:120px;resize:none;"></textarea></div>
+    <div class="fg"><label class="fl">Estado</label><select class="fs" id="econt-estado"><option value="pendiente">Pendiente</option><option>En proceso</option><option>Publicado</option></select></div>
+    <button class="btn-p" id="btn-actualizar-cont">Guardar cambios</button>
+  </div>
+</div>
+
+<!-- ASISTENTE IA -->
+<div class="page" id="p-ia">
+  <span class="back" id="b-ia">← Módulos</span>
+  <div class="page-title">Asistente IA</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">¿Qué necesitas?</label>
+      <select class="fs" id="ia-tipo">
+        <option value="">Selecciona...</option>
+        <option value="caption">Caption para post</option>
+        <option value="idea-cont">Ideas de contenido</option>
+        <option value="nombre-prod">Nombre para producto</option>
+        <option value="respuesta-cli">Respuesta a cliente</option>
+        <option value="script-venta">Script de venta</option>
+        <option value="idea-curso">Idea para curso</option>
+        <option value="promo">Texto promocional</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">Contexto / detalles</label><textarea class="fi" id="ia-contexto" placeholder="Describe lo que necesitas con detalle..." style="height:80px;resize:none;"></textarea></div>
+    <button class="btn-p" id="btn-ia-gen">Generar con IA ✨</button>
+    <div id="ia-resultado" style="margin-top:12px;"></div>
+  </div>
+</div>
+
+<!-- AGENDA -->
+<div class="page" id="p-agenda">
+  <span class="back" id="b-agenda">← Módulos</span>
+  <div class="scr-head"><div class="page-title">Agenda</div><button class="btn-new" id="btn-ntarea">+ Tarea</button></div>
+  <div class="sec"><div class="sec-h"><div class="sec-t">Pendientes</div></div><div id="agenda-pend"><div class="loading">Cargando...</div></div></div>
+  <div class="sec">
+    <div class="sec-h"><div class="sec-t">🔄 Mejora continua semanal</div></div>
+    <div id="mejora-lista"></div>
+  </div>
+  <div class="sec"><div class="sec-h"><div class="sec-t">Completadas hoy</div></div><div id="agenda-hechas"><div class="loading">Cargando...</div></div></div>
+</div>
+
+<!-- NUEVA TAREA -->
+<div class="page" id="p-ntarea">
+  <span class="back" id="b-ntarea">← Agenda</span>
+  <div class="page-title">Nueva tarea</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Tarea *</label><input class="fi" id="nt-texto" placeholder="¿Qué tienes que hacer?"></div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="nt-fecha"></div>
+      <div class="fg"><label class="fl">Prioridad</label><select class="fs" id="nt-prior"><option>Alta</option><option selected>Media</option><option>Baja</option></select></div>
+    </div>
+    <div class="fg"><label class="fl">Categoría</label><select class="fs" id="nt-cat"><option value="pedido">Pedido</option><option value="contenido">Contenido</option><option value="curso">Curso</option><option value="admin">Admin</option><option value="personal">Personal</option></select></div>
+    <button class="btn-p" id="btn-guardar-tarea">Guardar tarea</button>
+  </div>
+</div>
+
+<!-- CURSOS -->
+<div class="page" id="p-cursos">
+  <span class="back" id="b-cursos">← Módulos</span>
+  <div class="scr-head"><div class="page-title">Cursos</div><button class="btn-new" id="btn-ncurso">+ Curso</button></div>
+  <div class="sec"><div id="lista-cursos"><div class="loading">Cargando...</div></div></div>
+</div>
+
+<!-- DETALLE CURSO -->
+<div class="page" id="p-detcurso">
+  <span class="back" id="b-detcurso">← Cursos</span>
+  <div id="detcurso-body"></div>
+</div>
+
+<!-- NUEVO ALUMNO -->
+<div class="page" id="p-nalumno">
+  <span class="back" id="b-nalumno">← Curso</span>
+  <div class="page-title">Agregar alumno</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="na-nombre" placeholder="Nombre completo"></div>
+    <div class="fg"><label class="fl">Teléfono</label><input class="fi" id="na-tel" placeholder="662 123 4567" type="tel"></div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Anticipo ($)</label><input class="fi" type="number" id="na-anticipo" placeholder="0"></div>
+      <div class="fg"><label class="fl">Total a pagar ($)</label><input class="fi" type="number" id="na-total" placeholder="0"></div>
+    </div>
+    <div class="fg"><label class="fl">Estado de pago</label>
+      <select class="fs" id="na-estado"><option>Anticipo pagado</option><option>Pago completo</option><option>Pendiente</option></select>
+    </div>
+    <button class="btn-p" id="btn-guardar-alumno">Agregar alumno</button>
+  </div>
+</div>
+
+<!-- NUEVO CURSO -->
+<div class="page" id="p-ncurso">
+  <span class="back" id="b-ncurso">← Cursos</span>
+  <div class="page-title">Nuevo curso</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="ncu-nombre" placeholder="Ej: Taller IA para emprendedoras"></div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="ncu-fecha"></div>
+      <div class="fg"><label class="fl">Precio ($)</label><input class="fi" type="number" id="ncu-precio" placeholder="0"></div>
+    </div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Cupos</label><input class="fi" type="number" id="ncu-cupos" placeholder="0"></div>
+      <div class="fg"><label class="fl">Alumnos inscritos</label><input class="fi" type="number" id="ncu-alumnos" placeholder="0"></div>
+    </div>
+    <div class="fg"><label class="fl">Lugar / Modalidad</label><input class="fi" id="ncu-lugar" placeholder="Dirección o En línea"></div>
+    <div class="fg"><label class="fl">Descripción</label><input class="fi" id="ncu-desc" placeholder="¿Qué aprenderán?"></div>
+    <button class="btn-p" id="btn-guardar-curso">Guardar curso</button>
+  </div>
+</div>
+
+<!-- EDITAR CURSO -->
+<div class="page" id="p-editar-curso">
+  <span class="back" id="b-editar-curso">← Curso</span>
+  <div class="page-title">Editar curso</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="ecurso-nombre"></div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="ecurso-fecha"></div>
+      <div class="fg"><label class="fl">Precio ($)</label><input class="fi" type="number" id="ecurso-precio"></div>
+    </div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Cupos</label><input class="fi" type="number" id="ecurso-cupos"></div>
+      <div class="fg"><label class="fl">Alumnos</label><input class="fi" type="number" id="ecurso-alumnos"></div>
+    </div>
+    <div class="fg"><label class="fl">Lugar</label><input class="fi" id="ecurso-lugar"></div>
+    <div class="fg"><label class="fl">Descripción</label><input class="fi" id="ecurso-desc"></div>
+    <button class="btn-p" id="btn-actualizar-curso">Guardar cambios</button>
+  </div>
+</div>
+
+<!-- COMUNICACION -->
+<div class="page" id="p-comunicacion">
+  <span class="back" id="b-comunicacion">← Módulos</span>
+  <div class="page-title">Comunicación</div>
+  <div class="sec">
+    <div class="sec-h"><div class="sec-t">Scripts WhatsApp</div></div>
+    <div class="wa-item"><div class="wa-t">Cómo hacer un pedido</div><div class="wa-txt" id="wa-1">Hola! 💜 Para hacer tu pedido necesito:
+1. Descripción del producto y medidas
+2. Anticipo del 50% para agendar
+3. Pago completo antes de la entrega
+
+Sin anticipo no inicio el trabajo. ¿Te mando los datos de pago?</div><span class="wa-copy" data-id="wa-1">📋 Copiar</span></div>
+    <div class="wa-item"><div class="wa-t">Responder cotización</div><div class="wa-txt" id="wa-2">Hola [nombre]! 💜 Con gusto te ayudo. [Producto] tiene un precio de $[precio]. Incluye diseño personalizado y lo tendrías listo en [días] días. Para apartar necesito un anticipo del 50%. ¿Te late?</div><span class="wa-copy" data-id="wa-2">📋 Copiar</span></div>
+    <div class="wa-item"><div class="wa-t">Cobrar anticipo</div><div class="wa-txt" id="wa-3">Hola [nombre]! Para iniciar tu pedido necesito el anticipo de $[monto]. Puedes transferir a [banco] cuenta [número] a nombre de Hope Ceja. Cuando me confirmes el pago arranco 🙌</div><span class="wa-copy" data-id="wa-3">📋 Copiar</span></div>
+    <div class="wa-item"><div class="wa-t">Pedido listo — cobrar saldo</div><div class="wa-txt" id="wa-4">Hola [nombre]! 🎉 Tu pedido está listo y quedó hermoso! El saldo pendiente es $[saldo]. Para coordinar la entrega necesito el pago completo. ¿Cómo prefieres recibirlo?</div><span class="wa-copy" data-id="wa-4">📋 Copiar</span></div>
+    <div class="wa-item"><div class="wa-t">Cambio después de aprobado</div><div class="wa-txt" id="wa-5">Hola [nombre]! Recibí tu solicitud de cambio 😊 Como el diseño ya estaba aprobado, este cambio tiene un costo adicional de $[monto] y puede retrasar la entrega. ¿Confirmamos el cambio?</div><span class="wa-copy" data-id="wa-5">📋 Copiar</span></div>
+    <div class="wa-item"><div class="wa-t">Retraso en entrega</div><div class="wa-txt" id="wa-6">Hola [nombre]! Te escribo para avisarte que tu pedido se retrasará hasta [nueva fecha] por [motivo]. Lamento el inconveniente y me comprometo a entregarte un trabajo de calidad 💜</div><span class="wa-copy" data-id="wa-6">📋 Copiar</span></div>
+    <div class="wa-item"><div class="wa-t">Seguimiento — no ha respondido</div><div class="wa-txt" id="wa-7">Hola [nombre]! Te escribo para saber si sigues interesada en tu pedido de [producto] 😊 Aquí sigo para ayudarte cuando gustes 💜</div><span class="wa-copy" data-id="wa-7">📋 Copiar</span></div>
+    <div class="wa-item"><div class="wa-t">Recuperar cliente</div><div class="wa-txt" id="wa-8">Hola [nombre]! Hace tiempo que no te veo por aquí 💜 Tengo productos nuevos que creo que te van a encantar. ¿Te mando el catálogo?</div><span class="wa-copy" data-id="wa-8">📋 Copiar</span></div>
+    <div class="wa-item"><div class="wa-t">Términos y condiciones completos</div><div class="wa-txt" id="wa-9">COMO REALIZAR UN PEDIDO:
+1. Cantidad, tamaño en CM (si aplica), color y tipografía exacta
+2. Anticipo del 50% para agendar — sin pago no se inicia
+3. Sin anticipo confirmado no se reserva fecha de entrega
+4. Cambios después de aprobado tienen costo adicional
+5. Entrega al día siguiente de concluir el pedido
+6. El saldo completo debe pagarse antes de la entrega
+Al pagar el anticipo aceptas todos estos términos 💜</div><span class="wa-copy" data-id="wa-9">📋 Copiar</span></div>
+  </div>
+</div>
+
+<!-- ANALYTICS -->
+<div class="page" id="p-analytics">
+  <span class="back" id="b-analytics">← Módulos</span>
+  <div class="page-title">Analytics</div>
+  <div id="analytics-body"><div class="loading">Cargando...</div></div>
+</div>
+
+<!-- CATALOGO -->
+<div class="page" id="p-catalogo">
+  <span class="back" id="b-catalogo">← Módulos</span>
+  <div class="scr-head"><div class="page-title">Catálogo</div><button class="btn-new" id="btn-nprod">+ Producto</button></div>
+  <div class="tecnica-tabs" id="cat-tabs" style="margin-bottom:10px;"></div>
+  <div class="sec"><div id="lista-catalogo"><div class="loading">Cargando...</div></div></div>
+</div>
+
+<!-- NUEVO/EDITAR PRODUCTO -->
+<div class="page" id="p-nprod">
+  <span class="back" id="b-nprod">← Catálogo</span>
+  <div class="page-title" id="nprod-title">Nuevo producto</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="prod-nombre" placeholder="Ej: Taza personalizada"></div>
+    <div class="fg"><label class="fl">Técnica *</label>
+      <select class="fs" id="prod-tecnica"><option value="">...</option><option>Sublimacion</option><option>DTF</option><option>Vinil</option><option>Papeleria</option><option>Curso</option><option>Otro</option></select>
+    </div>
+    <div class="fg"><label class="fl">Categoría</label><input class="fi" id="prod-cat" placeholder="Ej: Regalos, Ropa, Hogar..."></div>
+    <div class="fg"><label class="fl">Descripción</label><input class="fi" id="prod-desc" placeholder="¿Qué incluye?"></div>
+    <div class="fr2">
+      <div class="fg"><label class="fl">Precio base ($)</label><input class="fi" type="number" id="prod-precio" placeholder="0"></div>
+      <div class="fg"><label class="fl">¿Activo?</label><select class="fs" id="prod-activo"><option value="true">Sí</option><option value="false">No</option></select></div>
+    </div>
+    <button class="btn-p" id="btn-guardar-prod">Guardar producto</button>
+  </div>
+</div>
+
+<!-- RECETARIO -->
+<div class="page" id="p-recetario">
+  <span class="back" id="b-recetario">← Catálogo</span>
+  <div class="page-title" id="rec-title">Receta del producto</div>
+  <div class="sec">
+    <div class="alert al-blue" id="rec-costo-total">Costo total de materiales: $0</div>
+    <div id="lista-receta"><div class="loading">Cargando...</div></div>
+    <button class="btn-p" id="btn-add-receta" style="margin-top:10px;">+ Agregar material</button>
+  </div>
+</div>
+
+<!-- PROVEEDORES -->
+<div class="page" id="p-proveedores">
+  <span class="back" id="b-proveedores">← Módulos</span>
+  <div class="scr-head"><div class="page-title">Proveedores</div><button class="btn-new" id="btn-nprov">+ Nuevo</button></div>
+  <div class="sec"><div id="lista-proveedores"><div class="loading">Cargando...</div></div></div>
+</div>
+
+<!-- NUEVO PROVEEDOR -->
+<div class="page" id="p-nprov">
+  <span class="back" id="b-nprov">← Proveedores</span>
+  <div class="page-title">Nuevo proveedor</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="nprov-n" placeholder="Nombre"></div>
+    <div class="fg"><label class="fl">Qué vende</label><input class="fi" id="nprov-v" placeholder="Materiales, productos..."></div>
+    <div class="fg"><label class="fl">Contacto</label><input class="fi" id="nprov-c" placeholder="Nombre de contacto"></div>
+    <div class="fg"><label class="fl">Teléfono</label><input class="fi" id="nprov-t" placeholder="Teléfono" type="tel"></div>
+    <div class="fg"><label class="fl">Ubicación</label><input class="fi" id="nprov-u" placeholder="Dirección"></div>
+    <button class="btn-p" id="btn-guardar-prov">Guardar proveedor</button>
+  </div>
+</div>
+
+<!-- EDITAR PROVEEDOR -->
+<div class="page" id="p-editar-prov">
+  <span class="back" id="b-editar-prov">← Proveedores</span>
+  <div class="page-title">Editar proveedor</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="eprov-n"></div>
+    <div class="fg"><label class="fl">Qué vende</label><input class="fi" id="eprov-v"></div>
+    <div class="fg"><label class="fl">Contacto</label><input class="fi" id="eprov-c"></div>
+    <div class="fg"><label class="fl">Teléfono</label><input class="fi" id="eprov-t" type="tel"></div>
+    <div class="fg"><label class="fl">Ubicación</label><input class="fi" id="eprov-u"></div>
+    <button class="btn-p" id="btn-actualizar-prov">Guardar cambios</button>
+  </div>
+</div>
+
+<!-- IDEAS Y NOTAS -->
+<div class="page" id="p-ideas">
+  <span class="back" id="b-ideas">← Módulos</span>
+  <div class="scr-head"><div class="page-title">Ideas + Notas</div><button class="btn-new" id="btn-nidea">+ Nueva</button></div>
+  <div class="sec"><div class="sec-h"><div class="sec-t">Notas rápidas</div></div><div id="lista-notas"><div class="empty">Sin notas</div></div></div>
+  <div class="sec"><div class="sec-h"><div class="sec-t">Ideas de negocio</div></div><div id="lista-ideas"><div class="loading">Cargando...</div></div></div>
+</div>
+
+<!-- NUEVA NOTA/IDEA -->
+<div class="page" id="p-nidea">
+  <span class="back" id="b-nidea">← Ideas</span>
+  <div class="page-title">Nueva nota / idea</div>
+  <div class="sec">
+    <div class="fg"><label class="fl">Tipo</label>
+      <select class="fs" id="ni-tipo-sel" onchange="document.getElementById('ni-idea-wrap').style.display=this.value==='idea'?'block':'none';document.getElementById('ni-color-wrap').style.display=this.value==='nota'?'block':'none';">
+        <option value="nota">📝 Nota rápida</option>
+        <option value="idea">💡 Idea de negocio</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">Texto *</label><textarea class="fi" id="ni-texto" placeholder="Escribe aquí..." style="height:80px;resize:none;"></textarea></div>
+    <div id="ni-idea-wrap" style="display:none;">
+      <div class="fg"><label class="fl">Tipo de idea</label><select class="fs" id="ni-tipo-idea"><option value="">...</option><option>Producto</option><option>Contenido</option><option>Curso</option><option>Proceso</option><option>Otro</option></select></div>
+      <div class="fg"><label class="fl">Prioridad</label><select class="fs" id="ni-prior-sel"><option>Alta</option><option selected>Media</option><option>Baja</option></select></div>
+    </div>
+    <div class="fg" id="ni-color-wrap"><label class="fl">Color de nota</label>
+      <select class="fs" id="ni-color"><option value="yellow">🟡 Amarillo</option><option value="purple">🟣 Morado</option><option value="green">🟢 Verde</option><option value="pink">🩷 Rosa</option></select>
+    </div>
+    <button class="btn-p" id="btn-guardar-nidea">Guardar</button>
+  </div>
+</div>
+
+</div>
+
+<nav class="nav" id="main-nav">
+  <div class="ni on" data-p="p-home"><div class="ic">🏠</div><div class="lb">Inicio</div></div>
+  <div class="ni" data-p="p-pedidos"><div class="ic">📦</div><div class="lb">Pedidos</div></div>
+  <div class="ni" data-p="p-clientes"><div class="ic">👥</div><div class="lb">Clientes</div></div>
+  <div class="ni" data-p="p-dinero"><div class="ic">💸</div><div class="lb">Dinero</div></div>
+  <div class="ni" data-p="p-mas"><div class="ic">☰</div><div class="lb">Más</div></div>
+</nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SURL='https://cgwbdzmuczxdfpjrtjgt.supabase.co',SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnd2Jkem11Y3h4ZGZwanJ0amd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2OTgwNjksImV4cCI6MjA5MTI3NDA2OX0.zlP73o2qtXHanbbg4okdc_f127-qg32XBgpRhbEWsIU';
+const COSTO_HORA=120,COSTOS_FIJOS=1320;
+let pedidoActual=null,clienteActual=null,cursoActual=null,tareasCache=[],productosSel=[],tecnicaSel='',editandoProd=null,recProducto=null,contActual=null,provActual=null,editMatActual=null;
+
+const DIAS=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+function hoy(){const d=new Date();return DIAS[d.getDay()]+' '+d.getDate()+' de '+MESES[d.getMonth()];}
+function iso(){return new Date().toISOString().split('T')[0];}
+function fmt(n){return '$'+(Math.round(parseFloat(n||0))).toLocaleString();}
+function estBadge(e){const m={'Pendiente':'b-pend','Sin diseño':'b-sind','Con diseño':'b-cond','En producción':'b-prod','Listo':'b-list','Entregado':'b-entr','Cancelado':'b-canc'};return`<span class="badge ${m[e]||'b-pend'}">${e}</span>`;}
+
+async function api(table,method,body,q){
+  try{
+    const r=await fetch(SURL+'/rest/v1/'+table+(q||''),{
+      method:method||'GET',
+      headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Content-Type':'application/json','Prefer':method==='POST'?'return=representation':''},
+      body:body?JSON.stringify(body):null
+    });
+    if(!r.ok){console.error(table,method,await r.text());return null;}
+    if(method==='DELETE'||r.status===204)return true;
+    return r.json();
+  }catch(e){console.error(e);return null;}
+}
+
+function toast(msg,dur=2500){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+function tap(el,fn){
+  if(!el)return;
+  el.addEventListener('touchend',function(e){e.preventDefault();fn();},{passive:false});
+  el.addEventListener('click',fn);
+}
+
+const NAV_MAP={
+  'p-home':0,'p-pedidos':1,'p-np1':1,'p-np2':1,'p-np3':1,'p-np4':1,'p-detalle':1,'p-editar':1,'p-reg-pago':1,
+  'p-clientes':2,'p-ncliente':2,'p-detcli':2,'p-editar-cli':2,
+  'p-dinero':3,'p-nmov':3,'p-deudas':3,'p-ndeuda':3,
+  'p-mas':4,'p-taller':4,'p-nmat':4,'p-emat':4,'p-costos':4,'p-costos-fijos':4,
+  'p-contenido':4,'p-ncont':4,'p-det-cont':4,'p-editar-cont':4,
+  'p-ia':4,'p-agenda':4,'p-ntarea':4,
+  'p-cursos':4,'p-ncurso':4,'p-detcurso':4,'p-nalumno':4,'p-editar-curso':4,
+  'p-comunicacion':4,'p-analytics':4,
+  'p-proveedores':4,'p-nprov':4,'p-editar-prov':4,
+  'p-catalogo':4,'p-nprod':4,'p-recetario':4,
+  'p-ideas':4,'p-nidea':4
+};
+
+function goP(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const el=document.getElementById(id);
+  if(el){el.classList.add('active');document.getElementById('content').scrollTop=0;}
+  const idx=NAV_MAP[id];
+  document.querySelectorAll('.ni').forEach((n,i)=>n.classList.toggle('on',i===idx));
+  if(id==='p-home')loadHome();
+  else if(id==='p-pedidos')loadPedidos();
+  else if(id==='p-clientes')loadClientes();
+  else if(id==='p-dinero')loadDinero();
+  else if(id==='p-deudas')loadDeudas();
+  else if(id==='p-taller')loadInventario();
+  else if(id==='p-contenido')loadContenido();
+  else if(id==='p-agenda')loadAgenda();
+  else if(id==='p-cursos')loadCursos();
+  else if(id==='p-analytics')loadAnalytics();
+  else if(id==='p-ideas')loadIdeas();
+  else if(id==='p-proveedores')loadProveedores();
+  else if(id==='p-costos-fijos')loadCostosFijos();
+  else if(id==='p-catalogo')loadCatalogo();
+  else if(id==='p-costos')loadCostosForm();
+}
+
+// ── HOME ──
+async function loadHome(){
+  document.getElementById('home-fecha').textContent=hoy();
+  const mesI=iso().substring(0,7)+'-01';
+  const [peds,movs,tareas,fechas,contHoy]=await Promise.all([
+    api('pedidos','GET',null,'?estado=neq.Entregado&estado=neq.Cancelado&order=created_at.desc'),
+    api('finanzas','GET',null,'?fecha=gte.'+mesI),
+    api('tareas','GET',null,'?fecha=eq.'+iso()+'&order=created_at.asc'),
+    api('fechas_importantes','GET',null,'?fecha=gte.'+iso()+'&order=fecha.asc&limit=3'),
+    api('contenido','GET',null,'?fecha=eq.'+iso()+'&estado=eq.pendiente&limit=5')
+  ]);
+  tareasCache=tareas||[];
+
+  // Alertas generales
+  const alertEl=document.getElementById('home-alertas');
+  alertEl.innerHTML='';
+  if(peds){
+    peds.filter(p=>!p.anticipo||p.anticipo==0).forEach(p=>{
+      alertEl.innerHTML+=`<div class="alert al-red">🚨 ${p.cliente} - sin anticipo</div>`;
+    });
+    const pedHoy=peds.filter(p=>p.fecha_entrega===iso());
+    if(pedHoy.length)alertEl.innerHTML+=`<div class="alert al-yellow">⏰ ${pedHoy.length} pedido(s) a entregar HOY</div>`;
+  }
+
+  // Alerta contenido del día
+  const contEl=document.getElementById('home-contenido-hoy');
+  if(contHoy&&contHoy.length){
+    contEl.innerHTML=contHoy.map(c=>`<div class="alert al-purple" style="cursor:pointer;" id="cont-hoy-${c.id}">
+      📱 <strong>HOY publicar:</strong> ${c.tema} · ${c.plataforma||''} · ${c.formato||''}
+    </div>`).join('');
+    contHoy.forEach(c=>{
+      tap(document.getElementById('cont-hoy-'+c.id),()=>verContenido(c));
+    });
+  }else{
+    contEl.innerHTML='';
+  }
+
+  // Alertas de stock bajo
+  const invAlerts=await api('inventario','GET',null,'?limit=100');
+  if(invAlerts){
+    invAlerts.filter(m=>parseInt(m.stock_actual||0)<=parseInt(m.stock_minimo||0)).forEach(m=>{
+      alertEl.innerHTML+=`<div class="alert al-red">📦 ${m.nombre} - stock bajo (${m.stock_actual||0})</div>`;
+    });
+  }
+
+  // Alerta deudas próximas
+  const deudas=await api('deudas','GET',null,'?limit=10').catch(()=>null);
+  if(deudas){
+    const hoy7=new Date();hoy7.setDate(hoy7.getDate()+7);
+    const h7str=hoy7.toISOString().split('T')[0];
+    deudas.filter(d=>d.fecha_limite_pago&&d.fecha_limite_pago<=h7str).forEach(d=>{
+      alertEl.innerHTML+=`<div class="alert al-red">💳 PAGAR: ${d.nombre} — ${fmt(d.pago_minimo)} antes del ${d.fecha_limite_pago}</div>`;
+    });
+  }
+
+  const ing=movs?movs.filter(m=>m.tipo==='Ingreso').reduce((a,m)=>a+parseFloat(m.monto||0),0):0;
+  const cobrar=peds?peds.reduce((a,p)=>a+(parseFloat(p.precio_total||0)-parseFloat(p.anticipo||0)),0):0;
+  document.getElementById('c-ventas').textContent=fmt(ing);
+  document.getElementById('c-mes').textContent=MESES[new Date().getMonth()];
+  document.getElementById('c-cobrar').textContent=fmt(cobrar);
+  document.getElementById('c-pedidos').textContent=peds?peds.length:0;
+  document.getElementById('c-sin').textContent=peds?peds.filter(p=>!p.anticipo||p.anticipo==0).length+' sin anticipo':'';
+  document.getElementById('c-ahorro').textContent=fmt(ing*0.1);
+
+  const hP=document.getElementById('home-pedidos');
+  if(!peds||!peds.length){hP.innerHTML='<div class="empty">Sin pedidos activos</div>';}
+  else{
+    hP.innerHTML=peds.slice(0,4).map((p,i)=>`<div class="pi" id="hp${i}">
+      <div class="pi-top"><div><div class="pi-n">${p.cliente}</div><div class="pi-p">${p.descripcion||p.producto||'-'}${p.tecnica?' · '+p.tecnica:''}</div></div><div class="pi-pr">${fmt(p.precio_total)}</div></div>
+      <div class="pi-bot">${estBadge(p.estado)}${(parseFloat(p.precio_total||0)-parseFloat(p.anticipo||0))>0?`<span class="bal">Saldo: ${fmt(parseFloat(p.precio_total||0)-parseFloat(p.anticipo||0))}</span>`:''}</div>
+    </div>`).join('');
+    peds.slice(0,4).forEach((p,i)=>tap(document.getElementById('hp'+i),()=>verDetalle(p)));
+  }
+
+  const hT=document.getElementById('home-tareas');
+  if(!tareasCache.length){
+    hT.innerHTML=`<div style="font-size:12px;color:#888;margin-bottom:8px;">Sugerencias para hoy:</div>
+      ${[{txt:'Cobrar anticipos pendientes',cat:'pedido'},{txt:'Publicar en redes hoy',cat:'contenido'},{txt:'Actualizar finanzas',cat:'admin'}].map((s,i)=>`<div class="tr sug" data-txt="${s.txt}" data-cat="${s.cat}"><div class="chk"></div><div class="tr-txt"><div class="tr-t">${s.txt}</div></div><span class="tcat tc-${s.cat==='pedido'?'p':s.cat==='contenido'?'c':'a'}">${s.cat}</span></div>`).join('')}`;
+    hT.querySelectorAll('.sug').forEach(el=>{
+      tap(el,async()=>{
+        await api('tareas','POST',{texto:el.dataset.txt,categoria:el.dataset.cat,fecha:iso(),completada:false,prioridad:'Media'});
+        loadHome();
+      });
+    });
+  }else{
+    hT.innerHTML=tareasCache.map(t=>`<div class="tr" data-id="${t.id}">
+      <div class="chk${t.completada?' done':''}"><svg width="10" height="9" viewBox="0 0 10 8" fill="none" stroke="white" stroke-width="2.5" style="display:${t.completada?'block':'none'}"><polyline points="1,4 4,7 9,1"/></svg></div>
+      <div class="tr-txt"><div class="tr-t${t.completada?' done':''}">${t.texto}</div><div class="tr-sub">${t.prioridad||'Media'}</div></div>
+      <span class="tcat ${t.categoria==='pedido'?'tc-p':t.categoria==='contenido'?'tc-c':t.categoria==='curso'?'tc-a':'tc-i'}">${t.categoria||'tarea'}</span>
+    </div>`).join('');
+    hT.querySelectorAll('.tr[data-id]').forEach(el=>tap(el,()=>toggleTarea(el)));
+  }
+
+  const hF=document.getElementById('home-fechas');
+  if(!fechas||!fechas.length){hF.innerHTML='<div class="empty">Sin fechas próximas</div>';}
+  else{
+    hF.innerHTML=fechas.map(f=>{
+      const dias=Math.ceil((new Date(f.fecha+' 12:00')-new Date())/(1000*60*60*24));
+      return`<div class="fecha-item">
+        <div class="fecha-dot ${f.tipo==='Temporada alta'?'dot-alta':'dot-media'}"></div>
+        <div class="fecha-info"><div class="fn">${f.nombre}</div><div class="fd">${f.fecha} · ${f.tipo||''}</div></div>
+        <div class="fecha-dias">${dias<=0?'HOY':dias===1?'Mañana':dias+' días'}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+async function toggleTarea(el){
+  const id=parseInt(el.dataset.id);
+  const t=tareasCache.find(x=>x.id===id);
+  if(!t)return;
+  t.completada=!t.completada;
+  await api('tareas','PATCH',{completada:t.completada},'?id=eq.'+id);
+  const chk=el.querySelector('.chk');
+  chk.classList.toggle('done',t.completada);
+  const svg=chk.querySelector('svg');
+  if(svg)svg.style.display=t.completada?'block':'none';
+  el.querySelector('.tr-t').classList.toggle('done',t.completada);
+}
+
+// ── PEDIDOS ──
+async function loadPedidos(){
+  const [act,hist]=await Promise.all([
+    api('pedidos','GET',null,'?estado=neq.Entregado&estado=neq.Cancelado&order=fecha_entrega.asc'),
+    api('pedidos','GET',null,'?or=(estado.eq.Entregado,estado.eq.Cancelado)&order=created_at.desc&limit=20')
+  ]);
+  const renderPed=(peds,prefix)=>{
+    if(!peds||!peds.length)return'<div class="empty">Sin pedidos</div>';
+    return peds.map((p,i)=>`<div class="pi" id="${prefix}${i}">
+      <div class="pi-top"><div><div class="pi-n">${p.cliente}</div><div class="pi-p">${p.descripcion||p.producto||'-'}${p.tecnica?' · '+p.tecnica:''}</div></div><div class="pi-pr">${fmt(p.precio_total)}</div></div>
+      <div class="pi-bot">${estBadge(p.estado)}${(parseFloat(p.precio_total||0)-parseFloat(p.anticipo||0))>0?`<span class="bal">Saldo: ${fmt(parseFloat(p.precio_total||0)-parseFloat(p.anticipo||0))}</span>`:''}</div>
+    </div>`).join('');
+  };
+  document.getElementById('ped-activos').innerHTML=renderPed(act,'pa');
+  document.getElementById('ped-historial').innerHTML=renderPed(hist,'ph');
+  act&&act.forEach((p,i)=>tap(document.getElementById('pa'+i),()=>verDetalle(p)));
+  hist&&hist.forEach((p,i)=>tap(document.getElementById('ph'+i),()=>verDetalle(p)));
+}
+
+function verDetalle(p){
+  pedidoActual=p;
+  const saldo=parseFloat(p.precio_total||0)-parseFloat(p.anticipo||0);
+  document.getElementById('det-body').innerHTML=`
+    <div class="det-card">
+      <div class="det-title">${p.cliente}</div>
+      <div class="det-row"><div class="det-l">Producto</div><div class="det-v">${p.descripcion||p.producto||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Técnica</div><div class="det-v">${p.tecnica||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Tiene diseño</div><div class="det-v">${p.tiene_disenio?'Sí':'No'}</div></div>
+      <div class="det-row"><div class="det-l">Precio total</div><div class="det-v">${fmt(p.precio_total)}</div></div>
+      <div class="det-row"><div class="det-l">Anticipo</div><div class="det-v ${!p.anticipo||p.anticipo==0?'red':''}">${!p.anticipo||p.anticipo==0?'⚠ Sin anticipo':'$'+parseFloat(p.anticipo).toLocaleString()}</div></div>
+      <div class="det-row"><div class="det-l">Saldo pendiente</div><div class="det-v ${saldo>0?'red':'green'}">${fmt(saldo)}</div></div>
+      <div class="det-row"><div class="det-l">Fecha pedido</div><div class="det-v">${p.fecha_pedido||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Fecha entrega</div><div class="det-v">${p.fecha_entrega||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Estado</div><div class="det-v purple">${p.estado}</div></div>
+      ${p.notas?`<div class="det-row"><div class="det-l">Notas</div><div class="det-v">${p.notas}</div></div>`:''}
+    </div>
+    <div class="sec">
+      <div class="sec-t" style="margin-bottom:10px;">Cambiar estado</div>
+      <div class="alert al-blue" style="font-size:11px;margin-bottom:8px;">💡 Solo "Entregado" registra el ingreso automáticamente</div>
+      <div class="est-grid">
+        <button class="btn-est" style="background:#dc2626;" id="est-sind">Sin diseño</button>
+        <button class="btn-est" style="background:#1e40af;" id="est-cond">Con diseño</button>
+        <button class="btn-est" style="background:#5b21b6;" id="est-enpr">En producción</button>
+        <button class="btn-est" style="background:#065f46;" id="est-list">Listo</button>
+        <button class="btn-est" style="background:#059669;" id="est-entr">Entregado ✅</button>
+        <button class="btn-est" style="background:#9d174d;" id="est-canc">Cancelado</button>
+      </div>
+      <div class="warn-box" id="reg-est" style="display:none;">🚨 No puedes entregar con saldo pendiente de ${fmt(saldo)}</div>
+    </div>
+    ${saldo>0?`<button class="btn-p" id="btn-reg-pago-det" style="background:#059669;">💰 Registrar pago de $${saldo.toLocaleString()}</button>`:'<div class="success-box">✅ Pedido pagado al 100%</div>'}
+    <button class="btn-sec" id="btn-cot-ped">📱 Generar cotización WhatsApp</button>
+    <button class="btn-sec" style="margin-top:6px;" id="btn-edit-ped">✏️ Editar pedido</button>
+    <button class="btn-sec" style="margin-top:6px;" id="btn-dup-ped">📋 Duplicar pedido</button>
+    <button class="btn-danger" id="btn-del-ped">🗑 Eliminar pedido</button>`;
+
+  tap(document.getElementById('est-sind'),()=>cambiarEst('Sin diseño'));
+  tap(document.getElementById('est-cond'),()=>cambiarEst('Con diseño'));
+  tap(document.getElementById('est-enpr'),()=>cambiarEst('En producción'));
+  tap(document.getElementById('est-list'),()=>cambiarEst('Listo'));
+  tap(document.getElementById('est-entr'),()=>cambiarEst('Entregado'));
+  tap(document.getElementById('est-canc'),()=>cambiarEst('Cancelado'));
+  tap(document.getElementById('btn-edit-ped'),()=>abrirEditar());
+  if(saldo>0){
+    tap(document.getElementById('btn-reg-pago-det'),()=>{
+      document.getElementById('reg-pago-info').textContent=`Saldo pendiente de ${p.cliente}: ${fmt(saldo)}`;
+      document.getElementById('rp-monto').value=saldo;
+      document.getElementById('rp-tipo').value='saldo';
+      goP('p-reg-pago');
+    });
+  }
+  tap(document.getElementById('btn-cot-ped'),()=>{
+    const txt=`COTIZACIÓN HOPE EVENTS 💜\n━━━━━━━━━━━━━━━━\nCliente: ${p.cliente}\nProducto: ${p.descripcion||p.producto||'-'}\nTécnica: ${p.tecnica||'-'}\n━━━━━━━━━━━━━━━━\nPrecio total: $${parseFloat(p.precio_total||0).toLocaleString()}\nAnticipo recibido: $${parseFloat(p.anticipo||0).toLocaleString()}\nSaldo pendiente: $${saldo.toLocaleString()}\nFecha entrega: ${p.fecha_entrega||'Por confirmar'}\n━━━━━━━━━━━━━━━━\nCONDICIONES:\n• Anticipo 50% para apartar\n• Sin pago completo no hay entrega\n• Cambios después de aprobado tienen costo extra\n• Al pagar el anticipo aceptas estos términos 💜\n━━━━━━━━━━━━━━━━\n📍 Hermosillo, Sonora\nInstagram: @hopeevents`;
+    navigator.clipboard.writeText(txt).then(()=>toast('📋 Cotización copiada'));
+  });
+  tap(document.getElementById('btn-dup-ped'),async()=>{
+    if(!confirm('¿Duplicar este pedido?'))return;
+    const r=await api('pedidos','POST',{cliente:pedidoActual.cliente,telefono:pedidoActual.telefono,descripcion:(pedidoActual.descripcion||'')+ ' (copia)',producto:pedidoActual.producto,tecnica:pedidoActual.tecnica,precio_total:pedidoActual.precio_total,anticipo:0,estado:'Pendiente',notas:pedidoActual.notas,tiene_disenio:pedidoActual.tiene_disenio,fecha_pedido:iso()});
+    if(r){toast('📋 Pedido duplicado');goP('p-pedidos');}
+  });
+  tap(document.getElementById('btn-del-ped'),async()=>{
+    if(!confirm('¿Eliminar este pedido?'))return;
+    await api('pedidos','DELETE',null,'?id=eq.'+pedidoActual.id);
+    toast('🗑 Pedido eliminado');goP('p-pedidos');
+  });
+  goP('p-detalle');
+}
+
+async function cambiarEst(estado){
+  if(!pedidoActual)return;
+  const saldo=parseFloat(pedidoActual.precio_total||0)-parseFloat(pedidoActual.anticipo||0);
+  if(estado==='Entregado'&&saldo>0){document.getElementById('reg-est').style.display='block';return;}
+  await api('pedidos','PATCH',{estado},'?id=eq.'+pedidoActual.id);
+  // SOLO "Entregado" registra ingreso — no "Listo"
+  if(estado==='Entregado'&&pedidoActual.precio_total>0){
+    await api('finanzas','POST',{tipo:'Ingreso',concepto:'Pedido entregado: '+(pedidoActual.descripcion||pedidoActual.producto||pedidoActual.cliente),categoria:'Venta producto',monto:pedidoActual.precio_total,fecha:iso(),metodo_pago:pedidoActual.metodo_pago||'Por confirmar'});
+    toast('✅ Entregado — ingreso registrado');
+  }else{
+    toast('✅ Estado: '+estado);
+  }
+  pedidoActual.estado=estado;
+  goP('p-pedidos');
+}
+
+// Registrar pago en pedido
+tap(document.getElementById('btn-guardar-pago'),async()=>{
+  if(!pedidoActual)return;
+  const monto=parseFloat(document.getElementById('rp-monto').value)||0;
+  const metodo=document.getElementById('rp-metodo').value;
+  const tipo=document.getElementById('rp-tipo').value;
+  const notas=document.getElementById('rp-notas').value;
+  if(!monto){toast('⚠ Escribe el monto');return;}
+  const nuevoAnticipo=parseFloat(pedidoActual.anticipo||0)+monto;
+  await api('pedidos','PATCH',{anticipo:nuevoAnticipo},'?id=eq.'+pedidoActual.id);
+  await api('finanzas','POST',{tipo:'Ingreso',concepto:`Pago ${tipo}: ${pedidoActual.descripcion||pedidoActual.cliente}${notas?' - '+notas:''}`,categoria:tipo==='saldo'?'Saldo pedido':'Anticipo',monto,fecha:iso(),metodo_pago:metodo});
+  pedidoActual.anticipo=nuevoAnticipo;
+  toast('✅ Pago registrado: '+fmt(monto));
+  verDetalle(pedidoActual);
+});
+
+function abrirEditar(){
+  if(!pedidoActual)return;
+  document.getElementById('ep-cliente').value=pedidoActual.cliente||'';
+  document.getElementById('ep-tel').value=pedidoActual.telefono||'';
+  document.getElementById('ep-desc').value=pedidoActual.descripcion||'';
+  document.getElementById('ep-disenio').value=pedidoActual.tiene_disenio?'true':'false';
+  document.getElementById('ep-precio').value=pedidoActual.precio_total||'';
+  document.getElementById('ep-anticipo').value=pedidoActual.anticipo||'';
+  document.getElementById('ep-fechap').value=pedidoActual.fecha_pedido||'';
+  document.getElementById('ep-fechae').value=pedidoActual.fecha_entrega||'';
+  document.getElementById('ep-notas').value=pedidoActual.notas||'';
+  goP('p-editar');
+}
+
+// ── NUEVO PEDIDO ──
+let npData={};
+tap(document.getElementById('btn-np2'),()=>{
+  const n=document.getElementById('np-nombre').value.trim();
+  if(!n){toast('⚠ El nombre es obligatorio');return;}
+  npData.cliente=n;npData.telefono=document.getElementById('np-tel').value;
+  productosSel=[];
+  goP('p-np2');loadProductosPorTecnica();
+});
+
+async function loadProductosPorTecnica(tec){
+  const tabs=document.getElementById('tec-tabs');
+  const tecnicas=['Sublimacion','DTF','Vinil','Papeleria','Papeleria+DTF','Curso','Mixto'];
+  if(!tec)tec='Sublimacion';
+  tecnicaSel=tec;
+  tabs.innerHTML=tecnicas.map(t=>`<div class="tec-tab${tec===t?' sel':''}" data-t="${t}">${t}</div>`).join('');
+  tabs.querySelectorAll('.tec-tab').forEach(el=>{
+    tap(el,()=>{
+      tecnicaSel=el.dataset.t;
+      tabs.querySelectorAll('.tec-tab').forEach(x=>x.classList.remove('sel'));
+      el.classList.add('sel');
+      loadProductosGrid(tecnicaSel);
+    });
+  });
+  loadProductosGrid(tec);
+}
+
+async function loadProductosGrid(tec){
+  const grid=document.getElementById('prod-grid');
+  grid.innerHTML='<div class="loading" style="grid-column:span 2;">Cargando...</div>';
+  const prods=await api('productos','GET',null,'?tecnica=eq.'+encodeURIComponent(tec)+'&activo=eq.true&order=nombre.asc');
+  if(!prods||!prods.length){grid.innerHTML='<div class="empty" style="grid-column:span 2;">Sin productos para esta técnica.<br><small>Agrega desde Catálogo → Módulos</small></div>';return;}
+  grid.innerHTML=prods.map((p,i)=>`<div class="prod-btn${productosSel.find(x=>x.id===p.id)?' sel':''}" id="prod${i}">
+    <div class="pn">${p.nombre}</div>
+    <div class="pp">${p.precio_base>0?fmt(p.precio_base):'Precio variable'}</div>
+  </div>`).join('');
+  prods.forEach((p,i)=>{
+    tap(document.getElementById('prod'+i),()=>{
+      const idx=productosSel.findIndex(x=>x.id===p.id);
+      if(idx>=0)productosSel.splice(idx,1);else productosSel.push(p);
+      document.getElementById('prod'+i).classList.toggle('sel',!!productosSel.find(x=>x.id===p.id));
+    });
+  });
+}
+
+tap(document.getElementById('btn-np3'),()=>{
+  if(!productosSel.length){toast('⚠ Selecciona al menos un producto');return;}
+  npData.tecnica=tecnicaSel;npData.productos=productosSel;
+  const refPrecio=productosSel.reduce((a,p)=>a+parseFloat(p.precio_base||0),0);
+  document.getElementById('np-costo-ref').textContent=refPrecio>0?`💡 Precio referencia: ${fmt(refPrecio)}`:'💡 Precio variable — calcula en Costos';
+  document.getElementById('np-fechap').value=iso();
+  goP('p-np3');
+});
+
+tap(document.getElementById('btn-np4'),()=>{
+  npData.descripcion=document.getElementById('np-desc').value;
+  npData.tiene_disenio=document.getElementById('np-disenio').value==='true';
+  npData.fecha_pedido=document.getElementById('np-fechap').value||iso();
+  npData.fecha_entrega=document.getElementById('np-fechae').value||null;
+  npData.notas=document.getElementById('np-notas').value;
+  goP('p-np4');
+});
+
+document.getElementById('np-precio').addEventListener('input',calcNPSaldo);
+document.getElementById('np-anticipo').addEventListener('input',calcNPSaldo);
+function calcNPSaldo(){
+  const p=parseFloat(document.getElementById('np-precio').value)||0;
+  const a=parseFloat(document.getElementById('np-anticipo').value)||0;
+  document.getElementById('np-saldo').textContent='Saldo: $'+(p-a).toFixed(2);
+  document.getElementById('np-warn-ant').style.display=a===0&&p>0?'block':'none';
+}
+
+tap(document.getElementById('btn-guardar-pedido'),async()=>{
+  const precio=parseFloat(document.getElementById('np-precio').value)||0;
+  if(!precio){toast('⚠ El precio es obligatorio');return;}
+  const anticipo=parseFloat(document.getElementById('np-anticipo').value)||0;
+  const data={cliente:npData.cliente,telefono:npData.telefono,descripcion:npData.descripcion,producto:npData.descripcion,tecnica:npData.tecnica,tiene_disenio:npData.tiene_disenio,precio_total:precio,anticipo,fecha_pedido:npData.fecha_pedido,fecha_entrega:npData.fecha_entrega,notas:npData.notas,estado:'Pendiente',metodo_pago:document.getElementById('np-metodo').value};
+  const r=await api('pedidos','POST',data);
+  if(!r){toast('❌ Error al guardar');return;}
+  if(anticipo>0)await api('finanzas','POST',{tipo:'Ingreso',concepto:'Anticipo: '+(npData.descripcion||'pedido')+' - '+npData.cliente,categoria:'Anticipo',monto:anticipo,fecha:iso(),metodo_pago:data.metodo_pago});
+  const cls=await api('clientes','GET',null,'?nombre=eq.'+encodeURIComponent(npData.cliente)+'&limit=1');
+  if(!cls||!cls.length)await api('clientes','POST',{nombre:npData.cliente,telefono:npData.telefono,ciudad:'Hermosillo',total_gastado:precio,num_pedidos:1,frecuente:false,primera_compra:iso(),ultima_compra:iso()});
+  else await api('clientes','PATCH',{total_gastado:parseFloat(cls[0].total_gastado||0)+precio,num_pedidos:parseInt(cls[0].num_pedidos||0)+1,ultima_compra:iso(),frecuente:parseInt(cls[0].num_pedidos||0)+1>=3},'?id=eq.'+cls[0].id);
+  productosSel=[];npData={};
+  toast('✅ Pedido guardado 🎉');goP('p-pedidos');
+});
+
+tap(document.getElementById('btn-actualizar'),async()=>{
+  if(!pedidoActual)return;
+  const data={cliente:document.getElementById('ep-cliente').value.trim(),telefono:document.getElementById('ep-tel').value,descripcion:document.getElementById('ep-desc').value,producto:document.getElementById('ep-desc').value,tiene_disenio:document.getElementById('ep-disenio').value==='true',precio_total:parseFloat(document.getElementById('ep-precio').value)||0,anticipo:parseFloat(document.getElementById('ep-anticipo').value)||0,fecha_pedido:document.getElementById('ep-fechap').value||null,fecha_entrega:document.getElementById('ep-fechae').value||null,notas:document.getElementById('ep-notas').value};
+  const r=await api('pedidos','PATCH',data,'?id=eq.'+pedidoActual.id);
+  if(r){toast('✅ Pedido actualizado');goP('p-pedidos');}else toast('❌ Error');
+});
+
+// ── CLIENTES ──
+async function loadClientes(busca){
+  const q=busca?'?nombre=ilike.*'+encodeURIComponent(busca)+'*&order=nombre.asc':'?order=nombre.asc';
+  const cls=await api('clientes','GET',null,q);
+  const el=document.getElementById('lista-clientes');
+  if(!cls||!cls.length){el.innerHTML='<div class="empty">Sin clientes</div>';return;}
+  const max=Math.max(...cls.map(c=>parseFloat(c.total_gastado||0)),1);
+  el.innerHTML=cls.map((c,i)=>`<div class="cli-item" id="cli${i}">
+    <div class="cli-top"><div class="cli-n">${c.nombre}</div><span class="badge ${c.frecuente?'b-list':'b-pend'}">${c.frecuente?'Frecuente':'Cliente'}</span></div>
+    <div class="cli-sub">${c.telefono||''} · ${c.num_pedidos||0} pedidos · ${fmt(c.total_gastado)}</div>
+    <div class="rank-bar"><div class="rank-fill" style="width:${Math.round((parseFloat(c.total_gastado||0)/max)*100)}%"></div></div>
+  </div>`).join('');
+  cls.forEach((c,i)=>tap(document.getElementById('cli'+i),()=>verCliente(c)));
+}
+
+document.getElementById('cli-busca').addEventListener('input',function(){loadClientes(this.value);});
+document.getElementById('ped-busca').addEventListener('input',function(){
+  const q=this.value.trim().toLowerCase();
+  if(!q){loadPedidos();return;}
+  api('pedidos','GET',null,'?cliente=ilike.*'+encodeURIComponent(q)+'*&order=created_at.desc').then(peds=>{
+    const el=document.getElementById('ped-activos');
+    if(!peds||!peds.length){el.innerHTML='<div class="empty">Sin resultados</div>';document.getElementById('ped-historial').innerHTML='';return;}
+    el.innerHTML=peds.map((p,i)=>`<div class="pi" id="ps${i}"><div class="pi-top"><div><div class="pi-n">${p.cliente}</div><div class="pi-p">${p.descripcion||p.producto||'-'}</div></div><div class="pi-pr">${fmt(p.precio_total)}</div></div><div class="pi-bot">${estBadge(p.estado)}</div></div>`).join('');
+    document.getElementById('ped-historial').innerHTML='';
+    peds.forEach((p,i)=>tap(document.getElementById('ps'+i),()=>verDetalle(p)));
+  });
+});
+
+document.getElementById('np-busca').addEventListener('input',async function(){
+  const q=this.value.trim();
+  const sugs=document.getElementById('np-cliente-sugs');
+  if(q.length<2){sugs.innerHTML='';return;}
+  const cls=await api('clientes','GET',null,'?nombre=ilike.*'+encodeURIComponent(q)+'*&limit=5');
+  if(!cls||!cls.length){sugs.innerHTML='';return;}
+  sugs.innerHTML=cls.map((c,i)=>`<div style="background:#f0ebf8;border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;font-size:13px;" id="sug-cli-${i}"><strong>${c.nombre}</strong> · ${c.telefono||'sin tel'} · ${c.num_pedidos||0} pedidos</div>`).join('');
+  cls.forEach((c,i)=>{
+    tap(document.getElementById('sug-cli-'+i),()=>{
+      document.getElementById('np-nombre').value=c.nombre;
+      document.getElementById('np-tel').value=c.telefono||'';
+      document.getElementById('np-cliente-sel').style.display='block';
+      document.getElementById('np-cliente-sel').textContent='✅ '+c.nombre+' ('+c.num_pedidos+' pedidos anteriores)';
+      sugs.innerHTML='';document.getElementById('np-busca').value='';
+    });
+  });
+});
+
+async function verCliente(c){
+  clienteActual=c;
+  const peds=await api('pedidos','GET',null,'?cliente=eq.'+encodeURIComponent(c.nombre)+'&order=created_at.desc&limit=10');
+  document.getElementById('detcli-body').innerHTML=`
+    <div class="det-card">
+      <div class="det-title">${c.nombre}</div>
+      <div class="det-row"><div class="det-l">Teléfono</div><div class="det-v">${c.telefono||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Instagram</div><div class="det-v">${c.instagram||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Total gastado</div><div class="det-v purple">${fmt(c.total_gastado)}</div></div>
+      <div class="det-row"><div class="det-l">Pedidos</div><div class="det-v">${c.num_pedidos||0}</div></div>
+      <div class="det-row"><div class="det-l">Primera compra</div><div class="det-v">${c.primera_compra||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Última compra</div><div class="det-v">${c.ultima_compra||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Cumpleaños</div><div class="det-v">${c.cumpleanos||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Llegó por</div><div class="det-v">${c.origen||'-'}</div></div>
+      ${c.notas?`<div class="det-row"><div class="det-l">Notas</div><div class="det-v">${c.notas}</div></div>`:''}
+    </div>
+    <div class="sec">
+      <div class="sec-t" style="margin-bottom:10px;">Historial de pedidos</div>
+      ${peds&&peds.length?peds.map(p=>`<div class="pi"><div class="pi-top"><div><div class="pi-n">${p.descripcion||p.producto||'-'}</div><div class="pi-p">${p.fecha_pedido||'-'} · ${p.tecnica||''}</div></div><div class="pi-pr">${fmt(p.precio_total)}</div></div><div class="pi-bot">${estBadge(p.estado)}</div></div>`).join(''):'<div class="empty">Sin pedidos</div>'}
+    </div>
+    <button class="btn-sec" id="btn-edit-cli">✏️ Editar cliente</button>
+    <button class="btn-danger" id="btn-del-cli">🗑 Eliminar cliente</button>`;
+  tap(document.getElementById('btn-edit-cli'),()=>{
+    document.getElementById('ecli-nombre').value=c.nombre||'';
+    document.getElementById('ecli-tel').value=c.telefono||'';
+    document.getElementById('ecli-ig').value=c.instagram||'';
+    document.getElementById('ecli-cumple').value=c.cumpleanos||'';
+    document.getElementById('ecli-notas').value=c.notas||'';
+    goP('p-editar-cli');
+  });
+  tap(document.getElementById('btn-del-cli'),async()=>{
+    if(!confirm('¿Eliminar este cliente?'))return;
+    await api('clientes','DELETE',null,'?id=eq.'+c.id);
+    toast('🗑 Cliente eliminado');goP('p-clientes');
+  });
+  goP('p-detcli');
+}
+
+tap(document.getElementById('btn-actualizar-cli'),async()=>{
+  if(!clienteActual)return;
+  const r=await api('clientes','PATCH',{nombre:document.getElementById('ecli-nombre').value.trim(),telefono:document.getElementById('ecli-tel').value,instagram:document.getElementById('ecli-ig').value,cumpleanos:document.getElementById('ecli-cumple').value||null,notas:document.getElementById('ecli-notas').value},'?id=eq.'+clienteActual.id);
+  if(r){toast('✅ Cliente actualizado');goP('p-clientes');}else toast('❌ Error');
+});
+
+tap(document.getElementById('btn-guardar-cliente'),async()=>{
+  const n=document.getElementById('nc-nombre').value.trim();
+  if(!n){toast('⚠ El nombre es obligatorio');return;}
+  const r=await api('clientes','POST',{nombre:n,telefono:document.getElementById('nc-tel').value,instagram:document.getElementById('nc-ig').value,cumpleanos:document.getElementById('nc-cumple').value||null,origen:document.getElementById('nc-origen').value,notas:document.getElementById('nc-notas').value,ciudad:'Hermosillo',total_gastado:0,num_pedidos:0,frecuente:false,primera_compra:iso(),ultima_compra:iso()});
+  if(r){toast('✅ Cliente guardado');goP('p-clientes');}else toast('❌ Error');
+});
+
+// ── DINERO ──
+async function loadDinero(){
+  const mesI=iso().substring(0,7)+'-01';
+  const [movs,peds]=await Promise.all([
+    api('finanzas','GET',null,'?fecha=gte.'+mesI+'&order=fecha.desc'),
+    api('pedidos','GET',null,'?estado=neq.Entregado&estado=neq.Cancelado&select=precio_total,anticipo')
+  ]);
+  const ing=movs?movs.filter(m=>m.tipo==='Ingreso').reduce((a,m)=>a+parseFloat(m.monto||0),0):0;
+  const gas=movs?movs.filter(m=>m.tipo==='Gasto').reduce((a,m)=>a+parseFloat(m.monto||0),0):0;
+  const cobrar=peds?peds.reduce((a,p)=>a+(parseFloat(p.precio_total||0)-parseFloat(p.anticipo||0)),0):0;
+  document.getElementById('fin-ahorro').textContent='$'+(ing*0.1).toFixed(2);
+  document.getElementById('fin-ing').textContent=fmt(ing);
+  document.getElementById('fin-gas').textContent=fmt(gas);
+  document.getElementById('fin-util').textContent=fmt(ing-gas);
+  document.getElementById('fin-cobrar2').textContent=fmt(cobrar);
+
+  // Deudas preview
+  const deudas=await api('deudas','GET',null,'?order=fecha_limite_pago.asc&limit=3').catch(()=>null);
+  const deudaEl=document.getElementById('home-deudas');
+  if(!deudas||!deudas.length){
+    deudaEl.innerHTML='<div class="empty">Sin deudas registradas</div>';
+  }else{
+    deudaEl.innerHTML=deudas.map(d=>{
+      const pct=d.limite>0?Math.min(Math.round((d.saldo_usado/d.limite)*100),100):0;
+      const alerta=d.fecha_limite_pago&&d.fecha_limite_pago<=iso()?'🚨':'⚠️';
+      return`<div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#1a0533;">${d.nombre}<span style="color:${pct>80?'#dc2626':'#7c3aed'}">${fmt(d.saldo_usado)}/${fmt(d.limite)}</span></div>
+        <div class="deuda-bar-wrap"><div class="deuda-bar-fill" style="width:${pct}%;background:${pct>80?'#dc2626':'#7c3aed'};"></div></div>
+        <div style="font-size:11px;color:#888;">Pago mínimo: ${fmt(d.pago_minimo)} · Antes del ${d.fecha_limite_pago||'?'} ${d.fecha_limite_pago&&d.fecha_limite_pago<=iso()?alerta:''}</div>
+      </div>`;
+    }).join('');
+  }
+
+  const el=document.getElementById('lista-movs');
+  if(!movs||!movs.length){el.innerHTML='<div class="empty">Sin movimientos este mes</div>';return;}
+  el.innerHTML=movs.map(m=>`<div class="mov-item">
+    <div class="mov-l"><div class="mc">${m.concepto}</div><div class="md">${m.fecha||''} · ${m.categoria||''} · ${m.metodo_pago||''}</div></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="mov-amt ${m.tipo==='Ingreso'?'ing':'gas'}">${m.tipo==='Ingreso'?'+':'-'}$${parseFloat(m.monto||0).toLocaleString()}</div>
+      <span style="font-size:14px;cursor:pointer;" id="del-mov-${m.id}">🗑</span>
+    </div>
+  </div>`).join('');
+  movs.forEach(m=>{
+    const btn=document.getElementById('del-mov-'+m.id);
+    if(btn)tap(btn,async()=>{if(!confirm('¿Eliminar?'))return;await api('finanzas','DELETE',null,'?id=eq.'+m.id);loadDinero();});
+  });
+}
+
+tap(document.getElementById('btn-guardar-mov'),async()=>{
+  const tipo=document.getElementById('nm-tipo').value,conc=document.getElementById('nm-concepto').value.trim(),monto=parseFloat(document.getElementById('nm-monto').value)||0;
+  if(!tipo||!conc||!monto){toast('⚠ Llena tipo, concepto y monto');return;}
+  const r=await api('finanzas','POST',{tipo,concepto:conc,monto,categoria:document.getElementById('nm-cat').value,metodo_pago:document.getElementById('nm-metodo').value,fecha:document.getElementById('nm-fecha').value||iso(),notas:document.getElementById('nm-notas').value});
+  if(r){toast('✅ Guardado');goP('p-dinero');}else toast('❌ Error');
+});
+
+// ── DEUDAS ──
+async function loadDeudas(){
+  const deudas=await api('deudas','GET',null,'?order=fecha_limite_pago.asc').catch(()=>null);
+  const alertEl=document.getElementById('alerta-deuda');
+  const el=document.getElementById('lista-deudas');
+  alertEl.innerHTML='';
+
+  if(!deudas){
+    el.innerHTML=`<div class="alert al-blue">Para usar el módulo de deudas necesitas crear la tabla "deudas" en Supabase con estas columnas: id, nombre, limite, saldo_usado, pago_minimo, fecha_limite_pago, fecha_corte, notas, created_at.</div>
+    <button class="btn-p" id="btn-crear-deuda-demo">+ Agregar deuda manualmente</button>`;
+    tap(document.getElementById('btn-crear-deuda-demo'),()=>goP('p-ndeuda'));
+    return;
+  }
+
+  // Deuda urgente: tarjeta negocio
+  const totalDeuda=deudas.reduce((a,d)=>a+parseFloat(d.saldo_usado||0),0);
+  if(totalDeuda>0)alertEl.innerHTML=`<div class="alert al-red">💳 Deuda total: ${fmt(totalDeuda)}</div>`;
+
+  if(!deudas.length){el.innerHTML='<div class="empty">Sin deudas registradas 🎉</div>';return;}
+  el.innerHTML=deudas.map((d,i)=>{
+    const pct=d.limite>0?Math.min(Math.round((d.saldo_usado/d.limite)*100),100):0;
+    const disponible=parseFloat(d.limite||0)-parseFloat(d.saldo_usado||0);
+    return`<div class="deuda-card deuda-red" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-size:15px;font-weight:700;color:#991b1b;">${d.nombre}</div>
+        <div style="display:flex;gap:8px;">
+          <span style="cursor:pointer;font-size:15px;" id="edit-deuda-${i}">✏️</span>
+          <span style="cursor:pointer;font-size:15px;" id="del-deuda-${i}">🗑</span>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Usado: <strong>${fmt(d.saldo_usado)}</strong></span>
+        <span>Límite: <strong>${fmt(d.limite)}</strong></span>
+      </div>
+      <div class="deuda-bar-wrap"><div class="deuda-bar-fill" style="width:${pct}%;background:#dc2626;"></div></div>
+      <div style="font-size:12px;color:#991b1b;margin-top:6px;display:flex;flex-direction:column;gap:3px;">
+        <span>Disponible: <strong>${fmt(disponible)}</strong> · Uso: ${pct}%</span>
+        <span>Pago mínimo: <strong>${fmt(d.pago_minimo)}</strong> · Antes del: <strong>${d.fecha_limite_pago||'?'}</strong> ${d.fecha_limite_pago&&d.fecha_limite_pago<iso()?'🚨 VENCIDO':''}</span>
+        ${d.fecha_corte?`<span>Corte: día ${d.fecha_corte} de cada mes</span>`:''}
+        ${d.notas?`<span>📝 ${d.notas}</span>`:''}
+      </div>
+      <button class="btn-danger" style="margin-top:10px;font-size:12px;padding:8px;" id="pagar-deuda-${i}">💰 Registrar pago de esta deuda</button>
+    </div>`;
+  }).join('');
+  deudas.forEach((d,i)=>{
+    const pagarBtn=document.getElementById('pagar-deuda-'+i);
+    if(pagarBtn)tap(pagarBtn,async()=>{
+      const monto=parseFloat(prompt(`¿Cuánto vas a pagar de "${d.nombre}"?\nPago mínimo: $${d.pago_minimo}`))||0;
+      if(!monto)return;
+      const nuevoSaldo=Math.max(0,parseFloat(d.saldo_usado||0)-monto);
+      await api('deudas','PATCH',{saldo_usado:nuevoSaldo},'?id=eq.'+d.id).catch(()=>null);
+      await api('finanzas','POST',{tipo:'Gasto',concepto:'Pago tarjeta: '+d.nombre,categoria:'Servicios',monto,fecha:iso(),metodo_pago:'Transferencia'});
+      toast('✅ Pago registrado: '+fmt(monto));loadDeudas();
+    });
+    const editBtn=document.getElementById('edit-deuda-'+i);
+    if(editBtn)tap(editBtn,async()=>{
+      const saldo=parseFloat(prompt('Saldo usado actualmente ($):',d.saldo_usado)||d.saldo_usado);
+      if(isNaN(saldo))return;
+      await api('deudas','PATCH',{saldo_usado:saldo},'?id=eq.'+d.id).catch(()=>null);
+      toast('✅ Actualizado');loadDeudas();
+    });
+    const delBtn=document.getElementById('del-deuda-'+i);
+    if(delBtn)tap(delBtn,async()=>{if(!confirm('¿Eliminar?'))return;await api('deudas','DELETE',null,'?id=eq.'+d.id).catch(()=>null);loadDeudas();});
+  });
+}
+
+tap(document.getElementById('btn-guardar-deuda'),async()=>{
+  const nombre=document.getElementById('nd-nombre').value.trim();
+  if(!nombre){toast('⚠ El nombre es obligatorio');return;}
+  const data={nombre,limite:parseFloat(document.getElementById('nd-limite').value)||0,saldo_usado:parseFloat(document.getElementById('nd-saldo').value)||0,pago_minimo:parseFloat(document.getElementById('nd-pago').value)||0,fecha_corte:parseInt(document.getElementById('nd-corte').value)||7,fecha_limite_pago:document.getElementById('nd-fechapago').value||null,notas:document.getElementById('nd-notas').value};
+  const r=await api('deudas','POST',data).catch(()=>null);
+  if(r){toast('✅ Deuda guardada');goP('p-deudas');}else{
+    // Si la tabla no existe, guarda en localStorage
+    const deudas=JSON.parse(localStorage.getItem('deudas_local')||'[]');
+    deudas.push({...data,id:Date.now()});
+    localStorage.setItem('deudas_local',JSON.stringify(deudas));
+    toast('✅ Guardado localmente');goP('p-deudas');
+  }
+});
+
+// ── INVENTARIO ──
+let invFiltroActual='todos';
+document.getElementById('inv-filtros').querySelectorAll('.tec-tab').forEach(el=>{
+  tap(el,()=>{
+    document.getElementById('inv-filtros').querySelectorAll('.tec-tab').forEach(x=>x.classList.remove('sel'));
+    el.classList.add('sel');invFiltroActual=el.dataset.f;loadInventario();
+  });
+});
+
+async function loadInventario(){
+  let q='?order=nombre.asc&limit=200';
+  if(invFiltroActual!=='todos'&&invFiltroActual!=='bajo')q='?categoria=eq.'+invFiltroActual+'&order=nombre.asc';
+  const mats=await api('inventario','GET',null,q);
+  const alertEl=document.getElementById('inv-alertas');
+  const el=document.getElementById('lista-inv');
+  if(!mats||!mats.length){el.innerHTML='<div class="empty">Sin materiales</div>';return;}
+  let matsShow=invFiltroActual==='bajo'?mats.filter(m=>parseInt(m.stock_actual||0)<=parseInt(m.stock_minimo||0)):mats;
+  alertEl.innerHTML=mats.filter(m=>parseInt(m.stock_actual||0)<=parseInt(m.stock_minimo||0)).map(m=>`<div class="alert al-red">⚠️ ${m.nombre} - stock bajo (${m.stock_actual||0})</div>`).join('');
+  el.innerHTML=matsShow.map(m=>{
+    const bajo=parseInt(m.stock_actual||0)<=parseInt(m.stock_minimo||0);
+    return`<div class="list-item">
+      <div class="li-top">
+        <div><div class="li-n">${m.nombre}</div><div class="li-sub">${m.categoria||''} · $${parseFloat(m.costo_unitario||0).toLocaleString()}/u · ${m.proveedor||'sin proveedor'}</div></div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <span class="badge ${bajo?'b-sind':'b-list'}">${bajo?'⚠ Bajo':'OK'}</span>
+          <span style="font-size:14px;cursor:pointer;" id="edit-mat-${m.id}">✏️</span>
+          <span style="font-size:14px;cursor:pointer;" id="del-mat-${m.id}">🗑</span>
+        </div>
+      </div>
+      <div class="li-sub" style="margin-top:4px;">Stock: ${m.stock_actual||0} / Mín: ${m.stock_minimo||0}</div>
+    </div>`;
+  }).join('');
+  matsShow.forEach(m=>{
+    const editBtn=document.getElementById('edit-mat-'+m.id);
+    if(editBtn)tap(editBtn,()=>{
+      editMatActual=m;
+      document.getElementById('emat-n').value=m.nombre||'';
+      document.getElementById('emat-cat').value=m.categoria||'';
+      document.getElementById('emat-stock').value=m.stock_actual||0;
+      document.getElementById('emat-min').value=m.stock_minimo||0;
+      document.getElementById('emat-costo').value=m.costo_unitario||0;
+      document.getElementById('emat-prov').value=m.proveedor||'';
+      goP('p-emat');
+    });
+    const del=document.getElementById('del-mat-'+m.id);
+    if(del)tap(del,async()=>{if(!confirm('¿Eliminar?'))return;await api('inventario','DELETE',null,'?id=eq.'+m.id);loadInventario();});
+  });
+}
+
+tap(document.getElementById('btn-actualizar-mat'),async()=>{
+  if(!editMatActual)return;
+  const r=await api('inventario','PATCH',{nombre:document.getElementById('emat-n').value.trim(),categoria:document.getElementById('emat-cat').value,stock_actual:parseFloat(document.getElementById('emat-stock').value)||0,stock_minimo:parseFloat(document.getElementById('emat-min').value)||0,costo_unitario:parseFloat(document.getElementById('emat-costo').value)||0,proveedor:document.getElementById('emat-prov').value},'?id=eq.'+editMatActual.id);
+  if(r){toast('✅ Material actualizado');goP('p-taller');}else toast('❌ Error');
+});
+
+tap(document.getElementById('btn-guardar-mat'),async()=>{
+  const n=document.getElementById('nmat-n').value.trim();
+  if(!n){toast('⚠ El nombre es obligatorio');return;}
+  const r=await api('inventario','POST',{nombre:n,categoria:document.getElementById('nmat-cat').value,stock_actual:parseFloat(document.getElementById('nmat-stock').value)||0,stock_minimo:parseFloat(document.getElementById('nmat-min').value)||5,costo_unitario:parseFloat(document.getElementById('nmat-costo').value)||0,proveedor:document.getElementById('nmat-prov').value});
+  if(r){toast('✅ Material guardado');goP('p-taller');}else toast('❌ Error');
+});
+
+// ── COSTOS ──
+document.getElementById('costos-tec-tabs').querySelectorAll('.tec-tab').forEach(el=>{
+  tap(el,()=>{
+    document.getElementById('costos-tec-tabs').querySelectorAll('.tec-tab').forEach(x=>x.classList.remove('sel'));
+    el.classList.add('sel');
+    document.getElementById('calc-form').style.display=el.dataset.ct==='calc'?'block':'none';
+    document.getElementById('dtf-table-wrap').style.display=el.dataset.ct==='dtf'?'block':'none';
+  });
+});
+
+async function loadCostosForm(){
+  const prods=await api('productos','GET',null,'?activo=eq.true&order=nombre.asc');
+  const sel=document.getElementById('calc-prod');
+  sel.innerHTML='<option value="">Selecciona...</option>'+(prods?prods.map(p=>`<option value="${p.id}" data-precio="${p.precio_base}">${p.nombre} (${p.tecnica})</option>`).join(''):'');
+}
+
+tap(document.getElementById('btn-calcular'),()=>{
+  const mins=(parseInt(document.getElementById('calc-dis').value)||0)+(parseInt(document.getElementById('calc-prod-min').value)||0)+(parseInt(document.getElementById('calc-emp').value)||0)+(parseInt(document.getElementById('calc-foto').value)||0);
+  const stored=localStorage.getItem('costos_fijos');
+  const fijosArr=stored?JSON.parse(stored):[{nombre:'Costos fijos',monto:1320}];
+  const totalFijos=fijosArr.reduce((a,f)=>a+f.monto,0);
+  const horaReal=totalFijos/160;
+  const cMano=(mins/60)*COSTO_HORA;
+  const cFijos=(mins/60)*horaReal;
+  const cMaq=parseFloat(document.getElementById('calc-maq').value)||0;
+  const cLuz=parseFloat(document.getElementById('calc-luz').value)||0;
+  const opt=document.getElementById('calc-prod').selectedOptions[0];
+  const cMat=opt?parseFloat(opt.dataset.precio||0):0;
+  const errP=parseFloat(document.getElementById('calc-err').value)||5;
+  const emergP=parseFloat(document.getElementById('calc-emerg').value)||5;
+  const pubP=parseFloat(document.getElementById('calc-pub').value)||0;
+  const margenP=parseFloat(document.getElementById('calc-margen').value)||100;
+  const envio=document.getElementById('calc-envio').checked?parseFloat(document.getElementById('calc-costo-envio').value)||0:0;
+  const base=cMat+cMano+cFijos+cMaq+cLuz+envio;
+  const conErr=base*(1+errP/100);
+  const conEmerg=conErr*(1+emergP/100);
+  const conPub=conEmerg*(1+pubP/100);
+  const precioSug=conPub*(1+margenP/100);
+  const res=document.getElementById('calc-resultado');
+  res.style.display='block';
+  res.innerHTML=`
+    <div class="cr-row"><span>Materiales</span><span>${fmt(cMat)}</span></div>
+    <div class="cr-row"><span>Mano de obra (${mins} min)</span><span>${fmt(cMano)}</span></div>
+    <div class="cr-row"><span>Costos fijos proporcionales</span><span>${fmt(cFijos)}</span></div>
+    ${cMaq>0?`<div class="cr-row"><span>Máquinas</span><span>${fmt(cMaq)}</span></div>`:''}
+    ${envio>0?`<div class="cr-row"><span>Envío</span><span>${fmt(envio)}</span></div>`:''}
+    <div class="cr-row"><span>% Error (${errP}%)</span><span>${fmt(base*(errP/100))}</span></div>
+    <div class="cr-row"><span>% Emergencia (${emergP}%)</span><span>${fmt(conErr*(emergP/100))}</span></div>
+    ${pubP>0?`<div class="cr-row"><span>% Publicidad</span><span>${fmt(conEmerg*(pubP/100))}</span></div>`:''}
+    <div class="cr-total"><span>Precio sugerido (${margenP}% margen)</span><span>${fmt(precioSug)}</span></div>
+    <div style="font-size:11px;opacity:0.7;margin-top:6px;">Costo real: ${fmt(conPub)} · Tu margen: ${margenP}%</div>`;
+});
+
+document.getElementById('calc-envio').addEventListener('change',function(){
+  document.getElementById('calc-envio-wrap').style.display=this.checked?'block':'none';
+});
+
+// ── CONTENIDO ──
+let contFiltro='todos';
+document.getElementById('cont-filtros').querySelectorAll('.tec-tab').forEach(el=>{
+  tap(el,()=>{
+    document.getElementById('cont-filtros').querySelectorAll('.tec-tab').forEach(x=>x.classList.remove('sel'));
+    el.classList.add('sel');contFiltro=el.dataset.cf;loadContenido();
+  });
+});
+
+async function loadContenido(){
+  let q='?order=fecha.asc&limit=50';
+  if(contFiltro==='pendiente')q='?estado=eq.pendiente&order=fecha.asc&limit=50';
+  else if(contFiltro==='Publicado')q='?estado=eq.Publicado&order=fecha.desc&limit=20';
+  const cont=await api('contenido','GET',null,q);
+  const el=document.getElementById('lista-cont');
+  if(!cont||!cont.length){el.innerHTML='<div class="empty">Sin contenido planeado</div>';return;}
+  el.innerHTML=cont.map((c,i)=>`<div class="cont-item" id="cont-item-${i}">
+    <div class="li-top">
+      <div style="flex:1;">
+        <div class="li-n">${c.tema}</div>
+        <div class="li-sub">${c.plataforma||''} · ${c.formato||''} · ${c.fecha||'sin fecha'}</div>
+        ${c.caption?`<div style="font-size:11px;color:#aaa;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;">${c.caption.substring(0,60)}...</div>`:''}
+      </div>
+      <div style="display:flex;gap:6px;align-items:flex-start;margin-left:8px;">
+        <span class="badge ${c.estado==='Publicado'?'b-list':c.estado==='En proceso'?'b-prod':'b-pend'}">${c.estado||'Idea'}</span>
+        <span style="font-size:14px;cursor:pointer;" id="del-cont-${c.id}">🗑</span>
+      </div>
+    </div>
+  </div>`).join('');
+  cont.forEach((c,i)=>{
+    tap(document.getElementById('cont-item-'+i),()=>verContenido(c));
+    const del=document.getElementById('del-cont-'+c.id);
+    if(del)tap(del,async(e)=>{e&&e.stopPropagation&&e.stopPropagation();if(!confirm('¿Eliminar?'))return;await api('contenido','DELETE',null,'?id=eq.'+c.id);loadContenido();});
+  });
+}
+
+function verContenido(c){
+  contActual=c;
+  document.getElementById('det-cont-body').innerHTML=`
+    <div class="det-card">
+      <div class="det-title">${c.tema}</div>
+      <div class="det-row"><div class="det-l">Fecha</div><div class="det-v">${c.fecha||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Plataforma</div><div class="det-v">${c.plataforma||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Formato</div><div class="det-v">${c.formato||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Tipo</div><div class="det-v">${c.tipo||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Estado</div><div class="det-v purple">${c.estado||'Idea'}</div></div>
+    </div>
+    ${c.caption?`<div class="sec">
+      <div class="sec-h"><div class="sec-t">📝 Caption completo</div></div>
+      <div class="caption-box" id="caption-text">${c.caption}</div>
+      <button class="btn-p" id="btn-copiar-caption" style="background:#059669;margin-top:10px;">📋 Copiar caption</button>
+    </div>`:''}
+    <div class="sec" style="display:flex;gap:8px;flex-direction:column;">
+      <button class="btn-est" style="background:#059669;border-radius:10px;padding:12px;" id="marcar-publicado">✅ Marcar como publicado</button>
+    </div>
+    <button class="btn-sec" id="btn-edit-cont">✏️ Editar</button>
+    <button class="btn-danger" id="btn-del-cont-det">🗑 Eliminar</button>`;
+  if(c.caption)tap(document.getElementById('btn-copiar-caption'),()=>{navigator.clipboard.writeText(c.caption).then(()=>toast('📋 Caption copiado — pégalo en Instagram/TikTok'));});
+  tap(document.getElementById('marcar-publicado'),async()=>{
+    await api('contenido','PATCH',{estado:'Publicado'},'?id=eq.'+c.id);
+    toast('✅ Marcado como publicado');goP('p-contenido');
+  });
+  tap(document.getElementById('btn-edit-cont'),()=>{
+    document.getElementById('econt-tema').value=c.tema||'';
+    document.getElementById('econt-plat').value=c.plataforma||'';
+    document.getElementById('econt-fmt').value=c.formato||'';
+    document.getElementById('econt-tipo').value=c.tipo||'';
+    document.getElementById('econt-fecha').value=c.fecha||'';
+    document.getElementById('econt-caption').value=c.caption||'';
+    document.getElementById('econt-estado').value=c.estado||'pendiente';
+    goP('p-editar-cont');
+  });
+  tap(document.getElementById('btn-del-cont-det'),async()=>{
+    if(!confirm('¿Eliminar?'))return;
+    await api('contenido','DELETE',null,'?id=eq.'+c.id);
+    toast('🗑 Eliminado');goP('p-contenido');
+  });
+  goP('p-det-cont');
+}
+
+tap(document.getElementById('btn-actualizar-cont'),async()=>{
+  if(!contActual)return;
+  const r=await api('contenido','PATCH',{tema:document.getElementById('econt-tema').value.trim(),plataforma:document.getElementById('econt-plat').value,formato:document.getElementById('econt-fmt').value,tipo:document.getElementById('econt-tipo').value,fecha:document.getElementById('econt-fecha').value||null,caption:document.getElementById('econt-caption').value,estado:document.getElementById('econt-estado').value},'?id=eq.'+contActual.id);
+  if(r){toast('✅ Contenido actualizado');verContenido({...contActual,tema:document.getElementById('econt-tema').value,caption:document.getElementById('econt-caption').value,estado:document.getElementById('econt-estado').value,plataforma:document.getElementById('econt-plat').value,formato:document.getElementById('econt-fmt').value});}else toast('❌ Error');
+});
+
+tap(document.getElementById('btn-guardar-cont'),async()=>{
+  const tema=document.getElementById('nc-tema').value.trim();
+  if(!tema){toast('⚠ Escribe el tema');return;}
+  const r=await api('contenido','POST',{tema,plataforma:document.getElementById('nc-plat').value,formato:document.getElementById('nc-fmt').value,tipo:document.getElementById('nc-tipo').value,fecha:document.getElementById('nc-fecha').value||null,caption:document.getElementById('nc-caption').value,estado:document.getElementById('nc-estado').value||'pendiente'});
+  if(r){toast('✅ Guardado');goP('p-contenido');}else toast('❌ Error');
+});
+
+// ── ASISTENTE IA ──
+tap(document.getElementById('btn-ia-gen'),async()=>{
+  const tipo=document.getElementById('ia-tipo').value,ctx=document.getElementById('ia-contexto').value.trim();
+  if(!tipo){toast('⚠ Selecciona qué necesitas');return;}
+  const resEl=document.getElementById('ia-resultado');
+  resEl.innerHTML='<div class="loading">Generando con IA... ✨</div>';
+  const prompts={
+    'caption':`Eres experta en marketing para pequeños negocios de personalización en México. Crea un caption atractivo para Instagram/TikTok para HopeEvents, negocio de personalización en Hermosillo (sublimación, DTF, vinil, papelería). Contexto: ${ctx||'post general'}. El caption debe ser en español mexicano, con emojis, máximo 150 palabras y con llamada a la acción con teléfono (662) 349-1698.`,
+    'idea-cont':`Eres experta en contenido para redes sociales. Da 5 ideas de contenido para HopeEvents, negocio de personalización en Hermosillo. Contexto: ${ctx||'contenido general'}. Incluye el tipo (Reel, Carrusel, Story), el hook de apertura y el CTA.`,
+    'nombre-prod':`Sugiere 5 nombres creativos para un producto personalizado. Contexto: ${ctx||'producto de personalización'}. Nombres en español, memorables y buenos para vender.`,
+    'respuesta-cli':`Eres asistente de HopeEvents, negocio de personalización en Hermosillo. Redacta una respuesta profesional y amable para: ${ctx}. Tono cálido, en español mexicano.`,
+    'script-venta':`Crea un script de venta para WhatsApp para HopeEvents. Situación: ${ctx||'prospecto interesado'}. Natural, no presioso, cierra con CTA al (662) 349-1698.`,
+    'idea-curso':`Sugiere 3 ideas de cursos/talleres para HopeEvents en Hermosillo, enfocados en IA para emprendedoras. Contexto: ${ctx||'cursos de IA'}. Incluye nombre, duración, precio sugerido y contenido básico.`,
+    'promo':`Crea un texto promocional para HopeEvents. Contexto: ${ctx||'promoción general'}. Llamativo, en español mexicano, con emojis, máximo 80 palabras.`
+  };
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompts[tipo]}]})});
+    const data=await resp.json();
+    const txt=data.content?data.content.map(i=>i.text||'').join('\n'):'No se pudo generar';
+    resEl.innerHTML=`<div class="sec" style="white-space:pre-wrap;font-size:13px;line-height:1.6;color:#1a0533;">${txt}</div>
+      <button class="btn-sec" id="ia-copy">📋 Copiar resultado</button>`;
+    tap(document.getElementById('ia-copy'),()=>{navigator.clipboard.writeText(txt).then(()=>toast('📋 Copiado'));});
+  }catch(e){resEl.innerHTML='<div class="alert al-red">Error al conectar con IA.</div>';}
+});
+
+// ── AGENDA ──
+const MEJORA_SEMANAL=[
+  {txt:'Revisar y actualizar precios del catálogo',cat:'admin'},
+  {txt:'Publicar en Instagram 3 veces esta semana',cat:'contenido'},
+  {txt:'Responder todos los mensajes pendientes de WA',cat:'pedido'},
+  {txt:'Registrar todos los gastos e ingresos',cat:'admin'},
+  {txt:'Tomar fotos de productos terminados',cat:'contenido'},
+  {txt:'Revisar stock de materiales clave',cat:'admin'},
+  {txt:'Planear contenido de la semana siguiente',cat:'contenido'},
+];
+
+async function loadAgenda(){
+  const tareas=await api('tareas','GET',null,'?order=fecha.asc,prioridad.asc&limit=50');
+  const pend=tareas?tareas.filter(t=>!t.completada):[];
+  const hechas=tareas?tareas.filter(t=>t.completada).slice(0,10):[];
+  const elP=document.getElementById('agenda-pend');
+  const elH=document.getElementById('agenda-hechas');
+  elP.innerHTML=pend.length?pend.map(t=>`<div class="tr" data-id="${t.id}">
+    <div class="chk${t.completada?' done':''}"><svg width="10" height="9" viewBox="0 0 10 8" fill="none" stroke="white" stroke-width="2.5" style="display:${t.completada?'block':'none'}"><polyline points="1,4 4,7 9,1"/></svg></div>
+    <div class="tr-txt"><div class="tr-t">${t.texto}</div><div class="tr-sub">${t.fecha||''} · ${t.prioridad||'Media'} · ${t.categoria||''}</div></div>
+    <span style="font-size:14px;cursor:pointer;" id="del-tar-${t.id}">🗑</span>
+  </div>`).join(''):'<div class="empty">Sin tareas pendientes 🎉</div>';
+  elH.innerHTML=hechas.length?hechas.map(t=>`<div class="tr"><div class="chk done"><svg width="10" height="9" viewBox="0 0 10 8" fill="none" stroke="white" stroke-width="2.5"><polyline points="1,4 4,7 9,1"/></svg></div><div class="tr-txt"><div class="tr-t done">${t.texto}</div><div class="tr-sub">${t.fecha||''}</div></div></div>`).join(''):'<div class="empty">Sin completadas</div>';
+  pend.forEach(t=>{
+    const el=document.querySelector(`.tr[data-id="${t.id}"]`);
+    if(el)tap(el,async()=>{await api('tareas','PATCH',{completada:true},'?id=eq.'+t.id);loadAgenda();});
+    const del=document.getElementById('del-tar-'+t.id);
+    if(del)tap(del,async(e)=>{e.stopPropagation();if(!confirm('¿Eliminar?'))return;await api('tareas','DELETE',null,'?id=eq.'+t.id);loadAgenda();});
+  });
+
+  // Mejora continua
+  const mejEl=document.getElementById('mejora-lista');
+  mejEl.innerHTML=MEJORA_SEMANAL.map((m,i)=>`<div class="mejora-item" id="mejora-${i}">
+    <div class="chk" id="mejora-chk-${i}"></div>
+    <div style="font-size:13px;color:#1a0533;flex:1;">${m.txt}</div>
+    <span class="tcat ${m.cat==='pedido'?'tc-p':m.cat==='contenido'?'tc-c':'tc-a'}">${m.cat}</span>
+  </div>`).join('');
+  MEJORA_SEMANAL.forEach((m,i)=>{
+    const chk=document.getElementById('mejora-chk-'+i);
+    const item=document.getElementById('mejora-'+i);
+    const done=localStorage.getItem('mejora_'+i+'_'+iso().substring(0,7));
+    if(done){chk.classList.add('done');chk.innerHTML='<svg width="10" height="9" viewBox="0 0 10 8" fill="none" stroke="white" stroke-width="2.5"><polyline points="1,4 4,7 9,1"/></svg>';}
+    tap(item,async()=>{
+      const isDone=localStorage.getItem('mejora_'+i+'_'+iso().substring(0,7));
+      if(isDone){localStorage.removeItem('mejora_'+i+'_'+iso().substring(0,7));chk.classList.remove('done');chk.innerHTML='';}
+      else{
+        localStorage.setItem('mejora_'+i+'_'+iso().substring(0,7),'1');
+        chk.classList.add('done');chk.innerHTML='<svg width="10" height="9" viewBox="0 0 10 8" fill="none" stroke="white" stroke-width="2.5"><polyline points="1,4 4,7 9,1"/></svg>';
+        await api('tareas','POST',{texto:m.txt,categoria:m.cat,fecha:iso(),completada:true,prioridad:'Media'});
+        toast('✅ '+m.txt.substring(0,30)+'...');
+      }
+    });
+  });
+}
+
+tap(document.getElementById('btn-guardar-tarea'),async()=>{
+  const txt=document.getElementById('nt-texto').value.trim();
+  if(!txt){toast('⚠ Escribe la tarea');return;}
+  const r=await api('tareas','POST',{texto:txt,fecha:document.getElementById('nt-fecha').value||iso(),prioridad:document.getElementById('nt-prior').value,categoria:document.getElementById('nt-cat').value,completada:false});
+  if(r){toast('✅ Tarea guardada');goP('p-agenda');}else toast('❌ Error');
+});
+
+// ── CURSOS ──
+async function loadCursos(){
+  const cs=await api('cursos','GET',null,'?order=fecha.asc');
+  const el=document.getElementById('lista-cursos');
+  if(!cs||!cs.length){el.innerHTML='<div class="empty">Sin cursos.</div>';return;}
+  el.innerHTML=cs.map((c,i)=>`<div class="list-item" id="cur-item-${i}" style="cursor:pointer;">
+    <div class="li-top">
+      <div><div class="li-n">${c.nombre}</div><div class="li-sub">${c.fecha||'Sin fecha'} · ${fmt(c.precio)} · ${c.lugar||''}</div></div>
+      <span class="badge ${c.estado==='Finalizado'?'b-entr':'b-pend'}">${c.estado||'Por planear'}</span>
+    </div>
+    <div style="font-size:12px;color:#888;margin-top:4px;">${c.alumnos_inscritos||0}/${c.cupos||0} alumnos · ${fmt(parseFloat(c.precio||0)*parseInt(c.alumnos_inscritos||0))}</div>
+  </div>`).join('');
+  cs.forEach((c,i)=>tap(document.getElementById('cur-item-'+i),()=>verCurso(c)));
+}
+
+async function verCurso(c){
+  cursoActual=c;
+  const alumnos=await api('alumnos_curso','GET',null,'?curso_id=eq.'+c.id+'&order=created_at.asc').catch(()=>null);
+  const anticipos=alumnos?alumnos.reduce((s,a)=>s+parseFloat(a.anticipo||0),0):0;
+  const ingTotal=alumnos?alumnos.filter(a=>a.estado==='Pago completo').reduce((s,a)=>s+parseFloat(a.total||0),0):0;
+  document.getElementById('detcurso-body').innerHTML=`
+    <div class="det-card">
+      <div class="det-title">${c.nombre}</div>
+      <div class="det-row"><div class="det-l">Fecha</div><div class="det-v">${c.fecha||'Sin fecha'}</div></div>
+      <div class="det-row"><div class="det-l">Precio</div><div class="det-v">${fmt(c.precio)}</div></div>
+      <div class="det-row"><div class="det-l">Lugar</div><div class="det-v">${c.lugar||'-'}</div></div>
+      <div class="det-row"><div class="det-l">Cupos</div><div class="det-v">${c.alumnos_inscritos||0}/${c.cupos||0}</div></div>
+      <div class="det-row"><div class="det-l">Anticipos recibidos</div><div class="det-v purple">${fmt(anticipos)}</div></div>
+      <div class="det-row"><div class="det-l">Ingresos totales</div><div class="det-v green">${fmt(ingTotal)}</div></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><div class="sec-t">Alumnos (${alumnos?alumnos.length:0})</div><button class="btn-new" id="btn-add-alumno">+ Alumno</button></div>
+      ${alumnos&&alumnos.length?alumnos.map(a=>`<div class="list-item">
+        <div class="li-top"><div><div class="li-n">${a.nombre}</div><div class="li-sub">${a.telefono||''} · Anticipo: ${fmt(a.anticipo)} · Total: ${fmt(a.total)}</div></div>
+        <span class="badge ${a.estado==='Pago completo'?'b-list':a.estado==='Anticipo pagado'?'b-prod':'b-pend'}">${a.estado}</span>
+        </div>
+      </div>`).join(''):'<div class="empty">Sin alumnos aún</div>'}
+    </div>
+    <button class="btn-sec" id="btn-edit-curso-det">✏️ Editar curso</button>
+    <button class="btn-danger" id="btn-del-curso-det">🗑 Eliminar curso</button>`;
+  tap(document.getElementById('btn-add-alumno'),()=>goP('p-nalumno'));
+  tap(document.getElementById('btn-edit-curso-det'),()=>{
+    document.getElementById('ecurso-nombre').value=c.nombre||'';
+    document.getElementById('ecurso-fecha').value=c.fecha||'';
+    document.getElementById('ecurso-precio').value=c.precio||'';
+    document.getElementById('ecurso-cupos').value=c.cupos||'';
+    document.getElementById('ecurso-alumnos').value=c.alumnos_inscritos||'';
+    document.getElementById('ecurso-lugar').value=c.lugar||'';
+    document.getElementById('ecurso-desc').value=c.descripcion||'';
+    goP('p-editar-curso');
+  });
+  tap(document.getElementById('btn-del-curso-det'),async()=>{
+    if(!confirm('¿Eliminar este curso?'))return;
+    await api('cursos','DELETE',null,'?id=eq.'+c.id);
+    toast('🗑 Curso eliminado');goP('p-cursos');
+  });
+  goP('p-detcurso');
+}
+
+tap(document.getElementById('btn-actualizar-curso'),async()=>{
+  if(!cursoActual)return;
+  const r=await api('cursos','PATCH',{nombre:document.getElementById('ecurso-nombre').value.trim(),fecha:document.getElementById('ecurso-fecha').value||null,precio:parseFloat(document.getElementById('ecurso-precio').value)||0,cupos:parseInt(document.getElementById('ecurso-cupos').value)||0,alumnos_inscritos:parseInt(document.getElementById('ecurso-alumnos').value)||0,lugar:document.getElementById('ecurso-lugar').value,descripcion:document.getElementById('ecurso-desc').value},'?id=eq.'+cursoActual.id);
+  if(r){toast('✅ Curso actualizado');goP('p-cursos');}else toast('❌ Error');
+});
+
+tap(document.getElementById('btn-guardar-alumno'),async()=>{
+  if(!cursoActual)return;
+  const nombre=document.getElementById('na-nombre').value.trim();
+  if(!nombre){toast('⚠ El nombre es obligatorio');return;}
+  const anticipo=parseFloat(document.getElementById('na-anticipo').value)||0;
+  const total=parseFloat(document.getElementById('na-total').value)||cursoActual.precio||0;
+  const r=await api('alumnos_curso','POST',{curso_id:cursoActual.id,nombre,telefono:document.getElementById('na-tel').value,anticipo,total,estado:document.getElementById('na-estado').value});
+  if(r){
+    if(anticipo>0)await api('finanzas','POST',{tipo:'Ingreso',concepto:'Anticipo curso: '+cursoActual.nombre+' - '+nombre,categoria:'Curso',monto:anticipo,fecha:iso()});
+    await api('cursos','PATCH',{alumnos_inscritos:parseInt(cursoActual.alumnos_inscritos||0)+1},'?id=eq.'+cursoActual.id);
+    toast('✅ Alumno agregado');verCurso(cursoActual);
+  }else toast('❌ Error');
+});
+
+tap(document.getElementById('btn-guardar-curso'),async()=>{
+  const n=document.getElementById('ncu-nombre').value.trim();
+  if(!n){toast('⚠ El nombre es obligatorio');return;}
+  const r=await api('cursos','POST',{nombre:n,fecha:document.getElementById('ncu-fecha').value||null,precio:parseFloat(document.getElementById('ncu-precio').value)||0,cupos:parseInt(document.getElementById('ncu-cupos').value)||0,alumnos_inscritos:parseInt(document.getElementById('ncu-alumnos').value)||0,lugar:document.getElementById('ncu-lugar').value,descripcion:document.getElementById('ncu-desc').value,estado:'Por planear'});
+  if(r){toast('✅ Curso guardado');goP('p-cursos');}else toast('❌ Error');
+});
+
+// ── ANALYTICS ──
+async function loadAnalytics(){
+  const mesI=iso().substring(0,7)+'-01';
+  const [peds,movs,cls]=await Promise.all([
+    api('pedidos','GET',null,'?order=created_at.desc&limit=100'),
+    api('finanzas','GET',null,'?fecha=gte.'+mesI),
+    api('clientes','GET',null,'?order=total_gastado.desc&limit=5')
+  ]);
+  const ing=movs?movs.filter(m=>m.tipo==='Ingreso').reduce((a,m)=>a+parseFloat(m.monto||0),0):0;
+  const gas=movs?movs.filter(m=>m.tipo==='Gasto').reduce((a,m)=>a+parseFloat(m.monto||0),0):0;
+  const tecCount={};
+  peds&&peds.forEach(p=>{if(p.tecnica)tecCount[p.tecnica]=(tecCount[p.tecnica]||0)+1;});
+  const maxTec=Math.max(...Object.values(tecCount),1);
+  document.getElementById('analytics-body').innerHTML=`
+    <div class="stat-card">
+      <div class="stat-title">Resumen del mes</div>
+      <div class="stat-row"><div class="stat-l">Ingresos</div><div class="stat-r" style="color:#059669;">${fmt(ing)}</div></div>
+      <div class="stat-row"><div class="stat-l">Gastos</div><div class="stat-r" style="color:#dc2626;">${fmt(gas)}</div></div>
+      <div class="stat-row"><div class="stat-l">Utilidad</div><div class="stat-r" style="color:#7c3aed;">${fmt(ing-gas)}</div></div>
+      <div class="stat-row"><div class="stat-l">Fondo ahorro</div><div class="stat-r">${fmt(ing*0.1)}</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Pedidos por técnica</div>
+      ${Object.entries(tecCount).map(([t,c])=>`<div class="stat-row"><div class="stat-l">${t}</div><div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:${Math.round((c/maxTec)*100)}%"></div></div></div><div class="stat-r">${c}</div></div>`).join('')||'<div class="empty">Sin datos</div>'}
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Top clientes</div>
+      ${cls&&cls.length?cls.map((c,i)=>`<div class="stat-row"><div class="stat-l">${i+1}. ${c.nombre}</div><div class="stat-r">${fmt(c.total_gastado)}</div></div>`).join(''):'<div class="empty">Sin datos</div>'}
+    </div>`;
+}
+
+// ── CATÁLOGO ──
+async function loadCatalogo(tec){
+  const tabs=document.getElementById('cat-tabs');
+  const tecnicas=['Sublimacion','DTF','Vinil','Papeleria','Curso','Otro'];
+  if(!tec)tec='Sublimacion';
+  tabs.innerHTML=tecnicas.map(t=>`<div class="tec-tab${tec===t?' sel':''}" data-t="${t}">${t}</div>`).join('');
+  tabs.querySelectorAll('.tec-tab').forEach(el=>{
+    tap(el,()=>{tabs.querySelectorAll('.tec-tab').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');loadCatalogoGrid(el.dataset.t);});
+  });
+  loadCatalogoGrid(tec);
+}
+
+async function loadCatalogoGrid(tec){
+  const el=document.getElementById('lista-catalogo');
+  const prods=await api('productos','GET',null,'?tecnica=eq.'+encodeURIComponent(tec)+'&order=nombre.asc');
+  if(!prods||!prods.length){el.innerHTML='<div class="empty">Sin productos para esta técnica.<br><small>Toca + Producto para agregar.</small></div>';return;}
+  el.innerHTML=prods.map((p,i)=>`<div class="list-item">
+    <div class="li-top">
+      <div><div class="li-n">${p.nombre}</div><div class="li-sub">${p.categoria||''} · ${p.descripcion||''}</div></div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div style="font-size:15px;font-weight:700;color:#7c3aed;">${fmt(p.precio_base)}</div>
+        <span style="font-size:14px;cursor:pointer;" id="rec-prod-${p.id}">📋</span>
+        <span style="font-size:14px;cursor:pointer;" id="edit-prod-${p.id}">✏️</span>
+        <span style="font-size:14px;cursor:pointer;" id="del-prod-${p.id}">🗑</span>
+      </div>
+    </div>
+    <span class="badge ${p.activo?'b-list':'b-canc'}" style="margin-top:4px;display:inline-block;">${p.activo?'Activo':'Inactivo'}</span>
+  </div>`).join('');
+  prods.forEach(p=>{
+    tap(document.getElementById('edit-prod-'+p.id),()=>{
+      editandoProd=p;
+      document.getElementById('nprod-title').textContent='Editar producto';
+      document.getElementById('prod-nombre').value=p.nombre||'';
+      document.getElementById('prod-tecnica').value=p.tecnica||'';
+      document.getElementById('prod-cat').value=p.categoria||'';
+      document.getElementById('prod-desc').value=p.descripcion||'';
+      document.getElementById('prod-precio').value=p.precio_base||'';
+      document.getElementById('prod-activo').value=p.activo?'true':'false';
+      goP('p-nprod');
+    });
+    tap(document.getElementById('rec-prod-'+p.id),()=>verRecetario(p));
+    tap(document.getElementById('del-prod-'+p.id),async()=>{if(!confirm('¿Eliminar?'))return;await api('productos','DELETE',null,'?id=eq.'+p.id);loadCatalogoGrid(tec);});
+  });
+}
+
+tap(document.getElementById('btn-guardar-prod'),async()=>{
+  const nombre=document.getElementById('prod-nombre').value.trim(),tecnica=document.getElementById('prod-tecnica').value;
+  if(!nombre||!tecnica){toast('⚠ Nombre y técnica son obligatorios');return;}
+  const data={nombre,tecnica,categoria:document.getElementById('prod-cat').value,descripcion:document.getElementById('prod-desc').value,precio_base:parseFloat(document.getElementById('prod-precio').value)||0,activo:document.getElementById('prod-activo').value==='true'};
+  const r=editandoProd?await api('productos','PATCH',data,'?id=eq.'+editandoProd.id):await api('productos','POST',data);
+  editandoProd=null;
+  if(r){toast('✅ Producto guardado');goP('p-catalogo');}else toast('❌ Error');
+});
+
+// ── RECETARIO ──
+async function verRecetario(p){
+  recProducto=p;
+  document.getElementById('rec-title').textContent='Receta: '+p.nombre;
+  goP('p-recetario');
+  const recetas=await api('recetas','GET',null,'?producto_id=eq.'+p.id);
+  const el=document.getElementById('lista-receta');
+  if(!recetas||!recetas.length){el.innerHTML='<div class="empty">Sin materiales en la receta.</div>';document.getElementById('rec-costo-total').textContent='Costo total de materiales: $0';return;}
+  let costoTotal=0;
+  const rows=await Promise.all(recetas.map(async r=>{
+    const mat=await api('inventario','GET',null,'?id=eq.'+r.material_id+'&limit=1');
+    const m=mat&&mat[0]?mat[0]:{nombre:'Material desconocido',costo_unitario:0};
+    const costo=parseFloat(r.cantidad||0)*parseFloat(m.costo_unitario||0);
+    costoTotal+=costo;return{r,m,costo};
+  }));
+  document.getElementById('rec-costo-total').textContent='Costo total de materiales: $'+costoTotal.toFixed(2);
+  el.innerHTML=rows.map(({r,m,costo})=>`<div class="list-item">
+    <div class="li-top">
+      <div><div class="li-n">${m.nombre}</div><div class="li-sub">Cantidad: ${r.cantidad} · $${parseFloat(m.costo_unitario||0).toFixed(4)}/u</div></div>
+      <div style="display:flex;gap:8px;align-items:center;"><div style="font-size:13px;font-weight:700;color:#7c3aed;">$${costo.toFixed(2)}</div><span style="cursor:pointer;" id="del-rec-${r.id}">🗑</span></div>
+    </div>
+  </div>`).join('');
+  rows.forEach(({r})=>{tap(document.getElementById('del-rec-'+r.id),async()=>{await api('recetas','DELETE',null,'?id=eq.'+r.id);verRecetario(recProducto);});});
+}
+
+tap(document.getElementById('btn-add-receta'),async()=>{
+  if(!recProducto)return;
+  const mats=await api('inventario','GET',null,'?order=nombre.asc&limit=200');
+  if(!mats||!mats.length){toast('⚠ Primero agrega materiales al inventario');return;}
+  const idx=parseInt(prompt('Número de material:\n'+mats.map((m,i)=>i+' - '+m.nombre).join('\n')));
+  if(isNaN(idx)||idx<0||idx>=mats.length)return;
+  const mat=mats[idx];
+  const cant=parseFloat(prompt('¿Cuántas unidades de "'+mat.nombre+'" necesitas?')||'0');
+  if(!cant)return;
+  const r=await api('recetas','POST',{producto_id:recProducto.id,material_id:mat.id,cantidad:cant,costo_total:cant*parseFloat(mat.costo_unitario||0)});
+  if(r){toast('✅ Material agregado');verRecetario(recProducto);}else toast('❌ Error');
+});
+
+// ── PROVEEDORES ──
+async function loadProveedores(){
+  const provs=await api('proveedores','GET',null,'?order=nombre.asc');
+  const el=document.getElementById('lista-proveedores');
+  if(!provs||!provs.length){el.innerHTML='<div class="empty">Sin proveedores</div>';return;}
+  el.innerHTML=provs.map((p,i)=>`<div class="list-item">
+    <div class="li-top">
+      <div><div class="li-n">${p.nombre}</div><div class="li-sub">${p.que_vende||''} · ${p.contacto||''} · ${p.telefono||''}</div></div>
+      <div style="display:flex;gap:8px;">
+        <span style="cursor:pointer;font-size:14px;" id="edit-prov-${p.id}">✏️</span>
+        <span style="cursor:pointer;font-size:14px;" id="del-prov-${p.id}">🗑</span>
+      </div>
+    </div>
+    ${p.ubicacion?`<div class="li-sub">📍 ${p.ubicacion}</div>`:''}
+  </div>`).join('');
+  provs.forEach(p=>{
+    tap(document.getElementById('edit-prov-'+p.id),()=>{
+      provActual=p;
+      document.getElementById('eprov-n').value=p.nombre||'';
+      document.getElementById('eprov-v').value=p.que_vende||'';
+      document.getElementById('eprov-c').value=p.contacto||'';
+      document.getElementById('eprov-t').value=p.telefono||'';
+      document.getElementById('eprov-u').value=p.ubicacion||'';
+      goP('p-editar-prov');
+    });
+    tap(document.getElementById('del-prov-'+p.id),async()=>{if(!confirm('¿Eliminar?'))return;await api('proveedores','DELETE',null,'?id=eq.'+p.id);loadProveedores();});
+  });
+}
+
+tap(document.getElementById('btn-actualizar-prov'),async()=>{
+  if(!provActual)return;
+  const r=await api('proveedores','PATCH',{nombre:document.getElementById('eprov-n').value.trim(),que_vende:document.getElementById('eprov-v').value,contacto:document.getElementById('eprov-c').value,telefono:document.getElementById('eprov-t').value,ubicacion:document.getElementById('eprov-u').value},'?id=eq.'+provActual.id);
+  if(r){toast('✅ Proveedor actualizado');goP('p-proveedores');}else toast('❌ Error');
+});
+
+tap(document.getElementById('btn-guardar-prov'),async()=>{
+  const n=document.getElementById('nprov-n').value.trim();
+  if(!n){toast('⚠ El nombre es obligatorio');return;}
+  const r=await api('proveedores','POST',{nombre:n,que_vende:document.getElementById('nprov-v').value,contacto:document.getElementById('nprov-c').value,telefono:document.getElementById('nprov-t').value,ubicacion:document.getElementById('nprov-u').value});
+  if(r){toast('✅ Proveedor guardado');goP('p-proveedores');}else toast('❌ Error');
+});
+
+// ── IDEAS Y NOTAS ──
+async function loadIdeas(){
+  const [ideas,notas]=await Promise.all([api('ideas','GET',null,'?order=created_at.desc'),api('notas','GET',null,'?order=fijada.desc,created_at.desc')]);
+  const elN=document.getElementById('lista-notas');
+  const elI=document.getElementById('lista-ideas');
+  elN.innerHTML=notas&&notas.length?notas.map(n=>`<div class="nota-card nota-${n.color||'yellow'}" style="display:flex;justify-content:space-between;align-items:flex-start;">
+    <div style="font-size:13px;color:#1a0533;flex:1;">${n.texto}</div>
+    <span style="cursor:pointer;margin-left:8px;font-size:14px;" id="del-nota-${n.id}">🗑</span>
+  </div>`).join(''):'<div class="empty">Sin notas</div>';
+  elI.innerHTML=ideas&&ideas.length?ideas.map(i=>`<div class="list-item">
+    <div class="li-top"><div><div class="li-n">${i.idea}</div><div class="li-sub">${i.tipo||''} · ${i.prioridad||''}</div></div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <span class="badge ${i.prioridad==='Alta'?'b-sind':i.prioridad==='Media'?'b-prod':'b-pend'}">${i.prioridad||'-'}</span>
+        <span style="cursor:pointer;font-size:14px;" id="del-idea-${i.id}">🗑</span>
+      </div>
+    </div>
+  </div>`).join(''):'<div class="empty">Sin ideas</div>';
+  notas&&notas.forEach(n=>{const btn=document.getElementById('del-nota-'+n.id);if(btn)tap(btn,async()=>{await api('notas','DELETE',null,'?id=eq.'+n.id);loadIdeas();});});
+  ideas&&ideas.forEach(i=>{const btn=document.getElementById('del-idea-'+i.id);if(btn)tap(btn,async()=>{await api('ideas','DELETE',null,'?id=eq.'+i.id);loadIdeas();});});
+}
+
+tap(document.getElementById('btn-guardar-nidea'),async()=>{
+  const tipo=document.getElementById('ni-tipo-sel').value,txt=document.getElementById('ni-texto').value.trim();
+  if(!txt){toast('⚠ Escribe algo');return;}
+  if(tipo==='nota'){
+    const r=await api('notas','POST',{texto:txt,color:document.getElementById('ni-color').value,fijada:false});
+    if(r){toast('📝 Nota guardada');goP('p-ideas');}else toast('❌ Error');
+  }else{
+    const r=await api('ideas','POST',{idea:txt,tipo:document.getElementById('ni-tipo-idea').value,prioridad:document.getElementById('ni-prior-sel').value,estado:'Nueva'});
+    if(r){toast('💡 Idea guardada');goP('p-ideas');}else toast('❌ Error');
+  }
+});
+
+// ── COSTOS FIJOS ──
+const FIJOS_DEFAULT=[{nombre:'Renta (30%)',monto:450},{nombre:'Luz (40%)',monto:120},{nombre:'Internet (10%)',monto:50},{nombre:'Canva',monto:150},{nombre:'Claude IA',monto:400},{nombre:'Instories',monto:200}];
+function loadCostosFijos(){
+  const el=document.getElementById('lista-fijos');
+  const stored=localStorage.getItem('costos_fijos');
+  const fijos=stored?JSON.parse(stored):FIJOS_DEFAULT;
+  const total=fijos.reduce((a,f)=>a+f.monto,0);
+  el.innerHTML=`<div class="alert al-blue" style="margin-bottom:10px;">Total: <strong>$${total.toLocaleString()}</strong> · Hora: <strong>$${Math.round(total/160*2)}/hr</strong></div>`+
+    fijos.map((f,i)=>`<div class="det-row"><div class="det-l">${f.nombre}</div><div style="display:flex;gap:8px;align-items:center;"><div class="det-v">$${f.monto.toLocaleString()}</div><span style="font-size:13px;cursor:pointer;" id="edit-fijo-${i}">✏️</span><span style="font-size:13px;cursor:pointer;" id="del-fijo-${i}">🗑</span></div></div>`).join('');
+  fijos.forEach((f,i)=>{
+    tap(document.getElementById('edit-fijo-'+i),()=>{
+      const nm=prompt('Nombre:',f.nombre);if(nm===null)return;
+      const mo=parseFloat(prompt('Monto ($):',f.monto))||f.monto;
+      fijos[i]={nombre:nm,monto:mo};localStorage.setItem('costos_fijos',JSON.stringify(fijos));loadCostosFijos();
+    });
+    tap(document.getElementById('del-fijo-'+i),()=>{fijos.splice(i,1);localStorage.setItem('costos_fijos',JSON.stringify(fijos));loadCostosFijos();});
+  });
+}
+
+tap(document.getElementById('btn-add-fijo'),()=>{
+  const nm=prompt('Nombre del gasto fijo:');if(!nm)return;
+  const mo=parseFloat(prompt('Monto mensual ($):'))||0;
+  const stored=localStorage.getItem('costos_fijos');
+  const fijos=stored?JSON.parse(stored):[...FIJOS_DEFAULT];
+  fijos.push({nombre:nm,monto:mo});localStorage.setItem('costos_fijos',JSON.stringify(fijos));loadCostosFijos();
+});
+
+// ── WHATSAPP COPIAR ──
+document.querySelectorAll('.wa-copy').forEach(el=>{
+  tap(el,()=>{navigator.clipboard.writeText(document.getElementById(el.dataset.id).textContent).then(()=>toast('📋 Copiado al portapapeles'));});
+});
+
+// ── NAVEGACIÓN PRINCIPAL ──
+document.querySelectorAll('.ni').forEach(el=>tap(el,()=>goP(el.dataset.p)));
+tap(document.getElementById('r-pedido'),()=>goP('p-np1'));
+tap(document.getElementById('r-pago'),()=>goP('p-nmov'));
+tap(document.getElementById('r-cont'),()=>goP('p-ncont'));
+tap(document.getElementById('r-nota'),()=>{
+  document.getElementById('ni-texto').value='';
+  document.getElementById('ni-tipo-sel').value='nota';
+  document.getElementById('ni-idea-wrap').style.display='none';
+  document.getElementById('ni-color-wrap').style.display='block';
+  goP('p-nidea');
+});
+tap(document.getElementById('hl-pedidos'),()=>goP('p-pedidos'));
+tap(document.getElementById('hl-tarea'),async()=>{
+  const txt=prompt('¿Qué tarea?');if(!txt)return;
+  await api('tareas','POST',{texto:txt,categoria:'admin',fecha:iso(),completada:false,prioridad:'Media'});
+  loadHome();
+});
+tap(document.getElementById('hl-fechas'),()=>goP('p-agenda'));
+tap(document.getElementById('hl-deudas'),()=>goP('p-deudas'));
+tap(document.getElementById('btn-npedido'),()=>goP('p-np1'));
+tap(document.getElementById('btn-ncliente'),()=>goP('p-ncliente'));
+tap(document.getElementById('btn-nmov'),()=>goP('p-nmov'));
+tap(document.getElementById('btn-nmat'),()=>goP('p-nmat'));
+tap(document.getElementById('btn-ncont'),()=>goP('p-ncont'));
+tap(document.getElementById('btn-ntarea'),()=>goP('p-ntarea'));
+tap(document.getElementById('btn-ncurso'),()=>goP('p-ncurso'));
+tap(document.getElementById('btn-nprov'),()=>goP('p-nprov'));
+tap(document.getElementById('btn-ndeuda'),()=>goP('p-ndeuda'));
+tap(document.getElementById('ir-taller'),()=>goP('p-taller'));
+tap(document.getElementById('ir-costos'),()=>goP('p-costos'));
+tap(document.getElementById('ir-contenido'),()=>goP('p-contenido'));
+tap(document.getElementById('ir-ia'),()=>goP('p-ia'));
+tap(document.getElementById('ir-agenda'),()=>goP('p-agenda'));
+tap(document.getElementById('ir-cursos'),()=>goP('p-cursos'));
+tap(document.getElementById('ir-comunicacion'),()=>goP('p-comunicacion'));
+tap(document.getElementById('ir-analytics'),()=>goP('p-analytics'));
+tap(document.getElementById('ir-proveedores'),()=>goP('p-proveedores'));
+tap(document.getElementById('ir-catalogo'),()=>goP('p-catalogo'));
+tap(document.getElementById('ir-ideas'),()=>goP('p-ideas'));
+tap(document.getElementById('btn-ver-fijos'),()=>goP('p-costos-fijos'));
+
+// Backs
+const BACKS={
+  'b-np1':'p-pedidos','b-np2':'p-np1','b-np3':'p-np2','b-np4':'p-np3',
+  'b-detalle':'p-pedidos','b-editar':'p-detalle','b-reg-pago':'p-detalle',
+  'b-ncliente':'p-clientes','b-detcli':'p-clientes','b-editar-cli':'p-detcli',
+  'b-nmov':'p-dinero','b-deudas':'p-dinero','b-ndeuda':'p-deudas',
+  'b-taller':'p-mas','b-nmat':'p-taller','b-emat':'p-taller',
+  'b-costos':'p-mas','b-costos-fijos':'p-costos',
+  'b-contenido':'p-mas','b-ncont':'p-contenido','b-det-cont':'p-contenido','b-editar-cont':'p-det-cont',
+  'b-ia':'p-mas','b-agenda':'p-mas','b-ntarea':'p-agenda',
+  'b-cursos':'p-mas','b-ncurso':'p-cursos','b-detcurso':'p-cursos','b-nalumno':'p-detcurso','b-editar-curso':'p-detcurso',
+  'b-comunicacion':'p-mas','b-analytics':'p-mas',
+  'b-proveedores':'p-mas','b-nprov':'p-proveedores','b-editar-prov':'p-proveedores',
+  'b-catalogo':'p-mas','b-nprod':'p-catalogo','b-recetario':'p-catalogo',
+  'b-ideas':'p-mas','b-nidea':'p-ideas'
+};
+Object.entries(BACKS).forEach(([id,dest])=>{const el=document.getElementById(id);if(el)tap(el,()=>goP(dest));});
+
+tap(document.getElementById('btn-nprod'),()=>{
+  editandoProd=null;
+  document.getElementById('nprod-title').textContent='Nuevo producto';
+  ['prod-nombre','prod-cat','prod-desc','prod-precio'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('prod-tecnica').value='';
+  document.getElementById('prod-activo').value='true';
+  goP('p-nprod');
+});
+
+// Fechas por defecto
+document.getElementById('np-fechap').value=iso();
+document.getElementById('nt-fecha').value=iso();
+document.getElementById('nm-fecha').value=iso();
+
+// Init deuda por defecto en Supabase si no existe la tabla
+(async()=>{
+  const test=await api('deudas','GET',null,'?limit=1').catch(()=>null);
+  if(!test){
+    // Agregar datos de deuda a localStorage si no hay tabla
+    const stored=localStorage.getItem('deudas_local');
+    if(!stored){
+      localStorage.setItem('deudas_local',JSON.stringify([{id:1,nombre:'Tarjeta negocio Citibanamex',limite:8800,saldo_usado:8638,pago_minimo:1230.30,fecha_corte:7,fecha_limite_pago:'2026-05-17',notas:'Pago antes del 17 de mayo'}]));
+    }
+  }
+})();
+
+loadHome();
+</script>
+</body>
+</html>
